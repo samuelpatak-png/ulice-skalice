@@ -94,7 +94,7 @@ Priradenie OSM ID každého domu je overené `prieskum/ray3.py` z kalibrovaných
 | 5.1 | Historická liatinová lampa s lucernou, s 8.1 t 3.6, h 4.8, `#2a2c2e`, pod lucernou kovaný držiak na kvetináč | áno (čiastočne) | `lots.lamps[0]` na `[265.1,−159.0]`, typ `lantern`. Chýbajúci typ: **Stĺpy verejného osvetlenia – typy** — výška (`lantern` má pevných 3.7 m, nie 4.8), farba ani držiak na kvetináč sa zadať nedajú. |
 | 5.2 | Rovnaká lampa, s 29.9 t 3.2, h 4.8 | áno (čiastočne) | `lots.lamps[1]` na `[284.2,−148.6]`, to isté obmedzenie. |
 | 5.3 | Rovnaká lampa, s 51.2 t 3.2, h 4.7, nesie značku B33 | áno (čiastočne) | `lots.lamps[2]` na `[303.2,−138.9]`, to isté obmedzenie. Značka na stĺpe viď 6.3. |
-| 5.4 | Zmazanie lámp z mapy v úseku | áno | `lots.clear` (koridor ulice s −3…60, t −9…+12) + `lots.clearLamps: true`. Zmazali sa 2 lampy z OSM na južnej strane (`[274.4,−145.6]`, `[301.1,−131.9]`), ktoré v Street View nie sú. Pole podľa schémy je aj v `clearLamps: [[250,−170,310,−128]]`. |
+| 5.4 | Zmazanie lámp z mapy v úseku | áno | `lots.clear` (koridor ulice s −3…60, t −13…+12) + `lots.clearLamps: true`. Zmazali sa 2 lampy z OSM na južnej strane (`[274.4,−145.6]`, `[301.1,−131.9]`), ktoré v Street View nie sú, a procedurálny ihličnan z mapy vo dvore úradu práce (`[275.1,−136.0]`), ktorý v zábere G1‑207 (17 m) tiež nie je. Pole podľa schémy je aj v `clearLamps: [[250,−170,310,−128]]`. |
 | 5.5 | Iné lampy v úseku | — | Nie sú (na južnej strane žiadna) — potvrdené balíkom. |
 
 ## 6. Zvislé dopravné značky (`trafficSigns`)
@@ -158,7 +158,7 @@ Poklopy a vpuste sú **v hre nie**, chýbajúci typ: **Poklopy, kanály, uličn�
 | 11.1 | Stromy v úseku s 0–58 | — | Žiadny strom nie je. Nič sa nekreslí, `trees` v štvrti nie je. |
 | 11.2 | Malý okrasný strom pri s 71.6 (mimo úseku) | — | Mimo úseku, neprenesené. |
 | 11.3 | Záhon so štrkom pred východným štítom 61000413 (~0.9 × 2.5 m, biely štrk lemovaný žulovými kockami) | áno (čiastočne) | `lots.surfaces[0]`, `m: 'gravel'`. Lem z kociek sa nekreslí. |
-| 11.4 | Trs okrasnej trávy (miskant/pennisetum, h ≈ 1.1, priemer 0.9) + malá sivozelená rastlina v záhone | áno (náhradou) | `lots.trees[0]`, `k: 25` (generický ker). Chýbajúci typ: **Stromy – veľkosti a presná podoba** — mierka ani druh okrasnej trávy sa zadať nedajú; malá rastlina nie je nakreslená. |
+| 11.4 | Trs okrasnej trávy (miskant/pennisetum, h ≈ 1.1, priemer 0.9) + malá sivozelená rastlina v záhone | áno (náhradou) | `lots.trees[0]`, `k: 25` (generický ker). Chýbajúci typ: **Stromy – veľkosti a presná podoba** — mierka sa zadať nedá (hra ju losuje 0,75–1,3), takže ker vyjde asi 2,5 m vysoký namiesto 1,1 m; druh okrasnej trávy hra nepozná a malá rastlina nie je nakreslená. Vidno to na renderi `312.2_-136.4_27.png`. |
 | 11.5 | Voľné kvetináče na ulici | — | Nie sú; muškáty sú na oknách (2.10). |
 | 11.6 | Stojan s reklamnou tabuľou pred vchodom 1A (s 47.7 t 4.4) | nie | Do schémy sa nezmestí. Dáta: `todo` — „stojan s reklamnou tabuľou“. |
 
@@ -173,6 +173,21 @@ Ostatné položky `todo` sú vymenované pri 2.5, 2.7, 2.8, 2.13, 2.14, 2.17, 2.
 | 12.3 | Stĺpy elektrického a telefónneho vedenia, vedenia nad ulicou | — | V úseku žiadne nie sú (skontrolovaných všetkých 20 snímok), preto `poles` ani `wires` v súbore nie sú. Poznámka je v komentári. |
 
 ---
+
+## Rozdiely voči Street View, ktoré po troch kolách renderov ostali
+
+Rendery: 5 stanovísk × 4 smery, 800 × 516 px, zvislé zorné pole 90° (f = 258 px), kamera 2.5 m nad vozovkou,
+kalibrované polohy kamier, čas v hre 13:12 (`?t=0.55`). Skript: `prieskum/centrum1/render_gorkeho.py`.
+
+1. **Osvetlenie.** Snímky sú zamračené (október), hra má vždy slnko. Gorkého vedie VJV–ZSZ, takže severná strana (líce 207°) sa dá nasvietiť, ale južná strana (líce 27°, súd a úrad práce) je v hre vždy v tieni a jej farba vychádza tmavšia a sýtejšia než na snímkach. Časom dňa sa to nedá vyriešiť.
+2. **Rozmiestnenie a veľkosť okien.** Hra generuje osi okien sama; 61000413 má v hre menšie a hustejšie okná než v skutočnosti (6 veľkých s hnedými rámami), 61003077 má 3 okná na podlažie namiesto 5 + úzke. Nedá sa zadať.
+3. **Dvojfarebnosť 61003077** (biele plochy prízemia, lizény, frontóniky, kruhové okno vo východnom štíte) chýba, budova je celokoralová.
+4. **Zámková dlažba** chodníkov je v hre jedna sivá textúra bez červeného dekoru z kosoštvorcov.
+5. **Trs okrasnej trávy** v záhone je vykreslený ako generický ker asi 2,5 m vysoký (pozri 11.4).
+6. **Výška lámp** je 3.7 m namiesto 4.8 m (typ `lantern` má pevnú výšku), poloha aj tvar sedia.
+7. **Nárožné domy z `namestie.js`:** Prima banka (60999098) a súd (61000733) majú v OSM značku obchodu (`fac = 4`) a v hre dostávajú presklené výklady na prízemí, ktoré v skutočnosti nemajú. Ich `looks` patria do `namestie.js`, preto to tento PR neopravuje (stačilo by im doplniť `ft`).
+8. **Prvky mimo úseku** (dom 61000168 na rohu, parkovisko za úradom práce, veža na obzore) nie sú spracované a v renderoch sa líšia; patria do ďalších úsekov.
+9. Všetko, čo je v tabuľkách vyššie označené „v hre nie“ (značky, tabuľky, poklopy, vpuste, skrinky, žlté značenie, vjazd, schodisko úradu práce, stojan s tabuľou) v renderoch prirodzene chýba.
 
 ## Zhrnutie neistôt prenesených z balíka
 

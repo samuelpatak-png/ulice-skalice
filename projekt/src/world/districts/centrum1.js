@@ -18,7 +18,8 @@ const looks = {
   // Gorkého 1A + 1B (súp. č. 2618), severná strana, dlhý biely prízemný dom s lososovým soklom a obytným podkrovím.
   // fh 3.6 + eave 5.0: vyvýšené prízemie (~7 schodov do vchodov) a vysoká nadmurovka nad oknami; rh 4.8 = prízemný s obytným podkrovím.
   61000413: { wall: '#efeae0', floors: 1, fh: 3.6, eave: 5.0, roof: 'gable', rh: 4.8, roofColor: '#a0473a', ang: 27, ft: 1 },
-  // Gorkého 2 (2045/2) Úrad práce, soc. vecí a rodiny, južná strana; koralová dvojpodlažná budova, bez ft (nie je rodinný dom)
+  // Gorkého 2 (2045/2) Úrad práce, soc. vecí a rodiny, južná strana; koralová dvojpodlažná budova.
+  // ft: 2 (fasáda starého mesta): OSM má na budove značku obchodu (fac 4) a bez ft by prízemie dostalo presklené výklady.
   61003077: { wall: '#dc7b68', floors: 2, fh: 3.9, eave: 8.6, roof: 'gable', rh: 3.6, roofColor: '#9a5444', ang: 27, ft: 2 },
 };
 
@@ -61,7 +62,8 @@ const retail = [
 // sever: 5.0 m od obrubníka po uličnú čiaru (v tom trávnatý pás, viď lots.islands);
 // juh: 3.5 m (pri ústí ~3.5, pred súdom 2.3 + 1.25 trávnik, pred úradom 3.0; pred dvorom 5.0 = lots.islands).
 const roads = [
-  { name: 'Gorkého', box: [250, -170, 312, -125], sw: [3.5, 5.0], off: [-0.05, -0.3], curbH: 0.12, mat: undefined },
+  // mat sa neuvádza = betónová zámková dlažba chodníka (predvolený povrch generátora)
+  { name: 'Gorkého', box: [250, -170, 312, -125], sw: [3.5, 5.0], off: [-0.05, -0.3], curbH: 0.12 },
 ];
 
 // -------------------------------------------------------------------- ploty, múry, brána (južná strana, medzi súdom a úradom práce)
