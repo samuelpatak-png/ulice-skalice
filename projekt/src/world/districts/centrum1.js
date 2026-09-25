@@ -150,11 +150,12 @@ const lamps = [
 ];
 
 // Zvislé dopravné značky. dir = smer, ktorým hľadí líce značky (stupne od severu). Kódy podľa vyhl. 9/2009.
+// `on: 'lamp' | 'gate'` = značka bez vlastného stĺpika, tabuľa visí vo výške h a líce hľadí podľa dir.
 const trafficSigns = [
   { p: [261.2, -161.6], dir: 117, codes: ['P1', 'E2b'], h: 2.3, pole: 'grey', note: 's 3.5 t 4.1, západný koniec sev. trávnika; Daj prednosť v jazde! + dodatková Tvar križovatky; G3-297 u593, G2-297 u449, G3-27 u50; poloha ±1 m' },
   { p: [273.3, -146.0], dir: 310, codes: ['B33', 'A22'], h: 2.2, pole: 'grey', note: 's 21.3 t -4.1, juž. chodník na konci trávnika pred súdom; Zákaz státia + výstražná Deti; G2-207 u280, G3-117 u500; líce k autám od námestia' },
   { p: [303.2, -138.9], dir: 117, codes: ['B33'], h: 2.5, on: 'lamp', note: 'Zákaz státia na stĺpe lampy s 51.2 (G0-297 u343, zozadu G1-117 u343); líce na VJV' },
-  { p: [277.7, -139.4], dir: 27, codes: ['B1'], h: 1.8, on: 'gate', note: 's 28.3 t -8.0, Zákaz vjazdu všetkých vozidiel v oboch smeroch, na západnom stĺpiku brány dvora úradu práce (G1-207 u730, G2-117 u656, G1-297 u200); uchytenie na bránu schéma nepozná' },
+  { p: [277.7, -139.4], dir: 27, codes: ['B1'], h: 1.8, on: 'gate', note: 's 28.3 t -8.0, Zákaz vjazdu všetkých vozidiel v oboch smeroch, na západnom stĺpiku brány dvora úradu práce (G1-207 u730, G2-117 u656, G1-297 u200); h 1.8 je hodnota z balíka — fotogrametria z G1-207 a G1-297 dáva stred tabule ~2.3 m nad chodníkom, ale rovnaký posun ~+0.7 m vychádza aj pri ostatných značkách úseku, takže ide o systematický rozdiel voči balíku, nie o chybu tejto položky' },
   { p: [315.4, -137.8], dir: 255, codes: ['B34'], h: 2.2, pole: 'white', note: 'MIMO ÚSEKU tesne za križovatkou (s 62.5 t 7.8), trávnik pri rohu 61000168; Zákaz zastavenia, biely šikmo naklonený stĺpik; G0-117 u212, G0-27 u773; dir neisté' },
 ];
 

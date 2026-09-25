@@ -12,7 +12,7 @@ Priradenie OSM ID každého domu je overené `prieskum/ray3.py` z kalibrovaných
 (G0 310.7,−137.1 · G1 291.0,−142.0 · G2 273.5,−151.8 · G3 263.1,−157.7 · G4 245.5,−171.4) s ohniskom f = 258 px.
 
 Stav: po **kole 1 opráv Kontrolóra** (kontrolovaný head 3ba4c2c). Zmenené riadky: 1.1, 1.2, 1.5–1.8, 2.2, 2.9, 2.9b, 2.15,
-3.5, 4.1–4.3, 4.5–4.10, 4.13, 4.16, 5.1–5.3, 7.1, 9.1, 11.1, 11.3, 11.4, 11.4b a zoznam ostávajúcich rozdielov.
+3.5, 4.1–4.3, 4.5–4.10, 4.13, 4.16, 5.1–5.3, 6.4, 7.1, 9.1, 11.1, 11.3, 11.4, 11.4b a zoznam ostávajúcich rozdielov.
 
 ---
 
@@ -106,13 +106,14 @@ Stav: po **kole 1 opráv Kontrolóra** (kontrolovaný head 3ba4c2c). Zmenené ri
 ## 6. Zvislé dopravné značky (`trafficSigns`)
 
 Všetkých päť riadkov je **v hre nie**, chýbajúci typ: **Zvislé dopravné značky**. Dáta sú v `trafficSigns` v `centrum1.js`.
+Uchytenie na bránu, plot alebo stenu schéma po rozšírení Technikom pozná (`on: 'gate'` / `'fence'` / `'wall'`), v úseku sa používa iba `on: 'gate'` pri B1 (6.4) a `on: 'lamp'` pri B33 (6.3).
 
 | # | Položka | Kde v dátach |
 |---|---|---|
 | 6.1 | P1 „Daj prednosť v jazde!“ + E2b (tvar križovatky), s 3.5 t 4.1, h 2.3, sivý stĺpik; poloha ±1 m | `trafficSigns[0]`, `p: [261.2,−161.6]`, `dir: 117` |
 | 6.2 | B33 Zákaz státia + A22 Deti, s 21.3 t −4.1, h 2.2, sivý stĺpik | `trafficSigns[1]`, `p: [273.3,−146.0]`, `dir: 310` |
 | 6.3 | B33 Zákaz státia na stĺpe lampy, s 51.2, h 2.5 | `trafficSigns[2]`, `p: [303.2,−138.9]`, `on: 'lamp'` |
-| 6.4 | B1 Zákaz vjazdu na západnom stĺpiku brány dvora, s 28.3 t −8.0, h 1.8 | `trafficSigns[3]`, `p: [277.7,−139.4]`, `on: 'gate'`. Pozn.: uchytenie značky na bránu schéma nepozná (pozná iba `pole`, `on: 'lamp'` alebo id stĺpa z `poles`); zapísané ako `on: 'gate'` a vysvetlené v `note`. |
+| 6.4 | B1 Zákaz vjazdu na západnom stĺpiku brány dvora, s 28.3 t −8.0, h 1.8 | `trafficSigns[3]`, `p: [277.7,−139.4]`, `dir: 27`, `on: 'gate'`. Technik schému rozšíril o `on: 'gate'` / `'fence'` / `'wall'` (značka bez vlastného stĺpika, tabuľa vo výške `h`, líce podľa `dir`), takže záznam je odteraz schémový a ostáva nezmenený. **Overenie `h`:** `h: 1.8`, `dir: 27` aj `p` sú presne hodnoty z `zariadenie.txt` (strojové porovnanie). Nezávislá fotogrametria z dvoch pohľadov (G1‑207 u723–736 v252–265 a G1‑297 u192–201 v253–264; kamera 2.5 m, f = 258 px) dáva priemer tabule 0.45 m a stred 2.47 / 2.48 m nad vozovkou, teda ~2.3 m nad chodníkom — o ~0.7 m viac než `h` z balíka. Rovnaký posun +0.7 až +0.9 m vychádza aj pri P1 (6.1) a B33+A22 (6.2), takže ide o systematický rozdiel voči balíku, nie o chybu tejto položky; vzájomné výšky značiek sedia. Hodnota sa preto nemenila. |
 | 6.5 | B34 Zákaz zastavenia, biely naklonený stĺpik, s 62.5 t 7.8 — **mimo úseku**, `dir` neisté | `trafficSigns[4]`, `p: [315.4,−137.8]` |
 | 6.6 | Sivý stĺpik bez viditeľnej značky pred súdom (s 6.1, h ≈ 2.5) — **neisté**, či nesie značku otočenú hranou | `todo` — „stĺpik bez značky“ |
 | 6.7 | Semafory | — v úseku nie sú |
@@ -204,6 +205,7 @@ kalibrované polohy kamier, čas v hre 13:12 (`?t=0.55`). Skript: `prieskum/cent
 - Zníženie obrubníka pred bránou dvora sa zo snímok nedá určiť — `driveways[0].note`.
 - Začiatok južného trávnika pred súdom (s ≈ 4.5) je neistý ±1 m — komentár nad `LAWN_S`.
 - Pripojenie múru na roh súdu (s 22.4–23.8) nevidno — komentár v `fences`.
+- Výšky zvislých značiek z balíka vychádzajú pri fotogrametrickom prepočte o ~0.7–0.9 m nižšie, než kde tabule v skutočnosti sú (overené pri B1, P1 a B33+A22 z dvoch pohľadov). Prevzaté sú hodnoty z balíka; posun je systematický, nie chyba jednej položky — na rozhodnutie pre Prieskumníka.
 - Južný rigol v úseku s 4–22 je zakrytý autami — kreslený je len od s 22.
 - `dir` značky B34 (mimo úseku) je neisté — `trafficSigns[4].note`.
 - Okrúhla mriežka pri s 19.9 a vpusť pri s 15.9 sú neisté — `furniture` `note`.
