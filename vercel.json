@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "cd projekt && npm ci",
+  "buildCommand": "rm -rf projekt/public/assets && mkdir -p projekt/public && cp -R hra/assets projekt/public/assets && cd projekt && npm run build",
+  "outputDirectory": "projekt/dist"
+}

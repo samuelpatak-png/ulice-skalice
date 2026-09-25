@@ -4,3 +4,5 @@ projekt/public/assets/
 .DS_Store
 __pycache__/
 *.pyc
+.vercel
+.env*
