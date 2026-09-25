@@ -30,9 +30,10 @@ const looks = {
   61000039: { wall: '#8b4c42', floors: 2, fh: 3.6, roof: 'gable', pitch: 42, roofColor: RED },
   314707636: { wall: '#f3efe4', floors: 2, fh: 3.8, roof: 'hip', rh: 6.5, roofColor: '#3d7b55', cat: 1 },   // Spolkový dom (D. Jurkovič, 1905)
   61000430: { wall: '#e9c3a5', floors: 2, fh: 4.0, roof: 'hip', rh: 3.2, ang: 15.1, roofColor: RED },                     // Záhorské múzeum
-  60999098: { wall: '#eee6d5', floors: 2, fh: 3.8, roof: 'gable', pitch: 38, roofColor: RED },                   // Prima banka
+  // ft potláča výklady, ktoré by dom dostal z obchodnej značky OSM (fac 4): v skutočnosti má prízemie bežné okná
+  60999098: { wall: '#eee6d5', floors: 2, fh: 3.8, roof: 'gable', pitch: 38, roofColor: RED, ft: 2 },            // Prima banka
   // east side
-  61000733: { wall: '#e38d7d', floors: 3, fh: 3.4, roof: 'hip', pitch: 56, roofColor: '#3f5c49', roofMat: 'grey' }, // court (1990s)
+  61000733: { wall: '#e38d7d', floors: 3, fh: 3.4, roof: 'hip', pitch: 56, roofColor: '#3f5c49', roofMat: 'grey', ft: 15 }, // court (1990s), ft = civic facade instead of the OSM shop fronts
   314690307: { wall: '#b9c5a3', floors: 1, fh: 4.1, roof: 'gable', roofColor: '#8c3e2c', ang: 108.5, rh: 4.5},
   60997244: { wall: '#93a6b6', floors: 2, fh: 3.5, roof: 'gable', roofColor: '#5d6064', roofMat: 'grey', cat: 1, ang: 98.7, rh: 4.0},
   // St Michael's church: plastered nave and chancel, tall pointed windows, steep red tile roof (tower built separately)
