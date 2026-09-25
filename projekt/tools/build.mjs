@@ -13,7 +13,7 @@ const r = await esbuild.build({
 const js = r.outputFiles[0].text.replace(/<\/script/gi, '<\\/script');
 const tpl = fs.readFileSync(path.join(ROOT, 'src/index.html'), 'utf8');
 const page = tpl + '\n<script type="module">\n' + js + '\n</script>\n';
-fs.writeFileSync(path.join(out, 'index.html'), page);
+fs.writeFileSync(path.join(out, 'index.html'), '<!doctype html><html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n' + page);
 // local test wrapper (the artifact host adds this skeleton itself)
 fs.writeFileSync(path.join(out, 'test.html'), '<!doctype html><html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>[hidden]{display:none!important}</style></head><body>' + page + '</body></html>');
 fs.rmSync(path.join(out, 'assets'), { recursive: true, force: true }); fs.rmSync(path.join(out, 'data'), { recursive: true, force: true });
