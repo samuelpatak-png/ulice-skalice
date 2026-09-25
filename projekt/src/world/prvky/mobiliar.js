@@ -8,6 +8,9 @@ import { S } from '../../core/state.js';
 import { dirVec, dirAng } from './znacky.js';
 
 const tt = (layer, hex, k = 1) => tintFor(layer, mulc(col(hex), k));
+// The world material is opaque, so glazing is a pale sky-coloured panel; the facade glass shader (FT.CURTAIN)
+// is almost black on a free-standing shelter and would turn it into a solid block.
+const GLASS = () => tt(L.PLASTER, '#cdd9dd', 0.95);
 export const NEW_TYPES = new Set(['litterBin', 'hydrant', 'hydrantUnder', 'manhole', 'drain', 'mailbox', 'parkingMeter', 'cabinet', 'phoneBooth', 'planter', 'busStop']);
 // flat ground details are not worth a draw on the low preset
 const TINY = new Set(['manhole', 'drain', 'hydrantUnder']);
@@ -17,7 +20,9 @@ export function buildFurniturePrvky(list) {
   for (const f of list || []) {
     if (!NEW_TYPES.has(f.t) || !f.p) continue;
     if (low && TINY.has(f.t)) continue;
-    const [x, z] = f.p, gy = CITY.groundH(x, z), dir = f.dir ?? 0, ang = dirAng(dir), n = dirVec(dir);
+    // n = the direction the piece faces (dir), u = across it; a CITY.box built with ang + 90 deg has its
+    // width along u and its front face looking along n
+    const [x, z] = f.p, gy = CITY.groundH(x, z), dir = f.dir ?? 0, ang = dirAng(dir), n = dirVec(dir), u = [-n[1], n[0]];
     const G = CITY.tile(x, z).b, Gf = CITY.tile(x, z).f;
     const iron = tt(L.PRECAST, '#2a2c2e', 0.85), steel = tt(L.PRECAST, '#9aa0a4', 0.9);
     switch (f.t) {
@@ -56,7 +61,7 @@ export function buildFurniturePrvky(list) {
         const w = f.w || 0.5, d = f.d || 0.32, c = tt(L.PRECAST, '#3a3c3d', 0.85);
         CITY.box(G, x, gy + 0.02, z, w, 0.02, d, ang, c, L.PRECAST, FT.STEEL, c, L.PRECAST, FT.STEEL);
         for (let i = -1; i <= 1; i++) {
-          const q = [x + n[0] * i * d * 0.3, z + n[1] * i * d * 0.3];
+          const q = [x + u[0] * i * d * 0.3, z + u[1] * i * d * 0.3];
           CITY.box(G, q[0], gy + 0.035, q[1], w * 0.8, 0.012, d * 0.14, ang, tt(L.PRECAST, '#17191a', 0.8), L.PRECAST, 0, tt(L.PRECAST, '#17191a', 0.8), L.PRECAST, 0);
         }
         break;
@@ -89,8 +94,8 @@ export function buildFurniturePrvky(list) {
         const w = f.w || 1.0, d = f.d || 0.95, h = f.h || 2.3, c = tt(L.PRECAST, f.color || '#2f6ab0', 0.9);
         CITY.box(G, x, gy, z, w, h, d, ang + Math.PI / 2, c, L.PRECAST, 0, mulc(c, 0.85), L.PRECAST, 0);
         for (const s of [1, -1]) {
-          const q = [x + n[0] * s * d * 0.5, z + n[1] * s * d * 0.5];
-          CITY.box(G, q[0], gy + 0.5, q[1], w - 0.16, h - 0.85, 0.03, ang + Math.PI / 2, tt(L.PLASTER, '#8fa3ad', 0.8), L.PLASTER, FT.CURTAIN, tt(L.PLASTER, '#8fa3ad', 0.8), L.PLASTER, 0);
+          const q = [x + n[0] * s * (d * 0.5 + 0.02), z + n[1] * s * (d * 0.5 + 0.02)];
+          CITY.box(G, q[0], gy + 0.5, q[1], w - 0.16, h - 0.85, 0.03, ang + Math.PI / 2, GLASS(), L.PLASTER, 0, GLASS(), L.PLASTER, 0);
         }
         CITY.addObst(x, z, Math.max(w, d) * 0.6, 'm');
         break;
@@ -98,37 +103,37 @@ export function buildFurniturePrvky(list) {
       case 'planter': {                                    // concrete planter with a shrub
         const c = tt(L.PRECAST, f.color || '#a8a49c', 0.9), h = f.h || 0.55, w = f.w || 0.9;
         if (f.style === 'round') { CITY.cylinder(G, x, gy, z, w / 2, h, 12, c, L.PRECAST, 0, false); CITY.disc(G, [x, z], w / 2 - 0.08, gy + h - 0.06, tt(L.FOREST, '#3a3528'), L.FOREST, 0, 12); }
-        else CITY.box(G, x, gy, z, w, h, f.d || w * 0.6, ang, c, L.PRECAST, 0, tt(L.FOREST, '#3a3528'), L.FOREST, 0);
+        else CITY.box(G, x, gy, z, w, h, f.d || w * 0.6, ang + Math.PI / 2, c, L.PRECAST, 0, tt(L.FOREST, '#3a3528'), L.FOREST, 0);
         const gc = tt(L.GRASS, '#3f5d2a', 1);
-        CITY.box(G, x, gy + h - 0.05, z, w * 0.8, 0.45, (f.d || w * 0.6) * 0.8, ang, gc, L.GRASS, FT.FOLIAGE, gc, L.GRASS, FT.FOLIAGE);
+        CITY.box(G, x, gy + h - 0.05, z, w * 0.8, 0.45, (f.d || w * 0.6) * 0.8, ang + Math.PI / 2, gc, L.GRASS, FT.FOLIAGE, gc, L.GRASS, FT.FOLIAGE);
         CITY.addObst(x, z, w * 0.6, 'm');
         break;
       }
       case 'busStop': {                                    // shelter with a glazed back, bench and a stop flag
-        const w = f.w || 3.6, d = f.d || 1.5, h = f.h || 2.45, u = [Math.cos(ang), Math.sin(ang)];
-        const roof = tt(L.PRECAST, '#b9c3c8', 0.9), glass = tt(L.PLASTER, '#8fa3ad', 0.8);
+        const w = f.w || 3.6, d = f.d || 1.5, h = f.h || 2.45, A = ang + Math.PI / 2;
+        const roof = tt(L.PRECAST, '#b9c3c8', 0.9), glass = GLASS();
         if (f.shelter !== false) {
           for (const s of [-1, 1]) {                        // corner posts
             for (const t of [-1, 1]) {
               const q = [x + u[0] * s * w / 2 + n[0] * t * d / 2, z + u[1] * s * w / 2 + n[1] * t * d / 2];
-              CITY.box(G, q[0], gy, q[1], 0.09, h, 0.09, ang, steel, L.PRECAST, FT.STEEL);
+              CITY.box(G, q[0], gy, q[1], 0.09, h, 0.09, A, steel, L.PRECAST, FT.STEEL);
             }
           }
           const back = [x - n[0] * d / 2, z - n[1] * d / 2];  // glazed back wall away from the facing direction
-          CITY.box(G, back[0], gy + 0.25, back[1], w - 0.2, h - 0.55, 0.04, ang, glass, L.PLASTER, FT.CURTAIN, glass, L.PLASTER, 0);
+          CITY.box(G, back[0], gy + 0.25, back[1], w - 0.2, h - 0.55, 0.04, A, glass, L.PLASTER, 0, glass, L.PLASTER, 0);
           for (const s of [-1, 1]) {
             const q = [x + u[0] * s * (w / 2 - 0.02), z + u[1] * s * (w / 2 - 0.02)];
-            CITY.box(G, q[0], gy + 0.25, q[1], 0.04, h - 0.55, d - 0.2, ang, glass, L.PLASTER, FT.CURTAIN, glass, L.PLASTER, 0);
+            CITY.box(G, q[0], gy + 0.25, q[1], 0.04, h - 0.55, d - 0.2, A, glass, L.PLASTER, 0, glass, L.PLASTER, 0);
           }
-          CITY.box(G, x, gy + h, z, w + 0.25, 0.09, d + 0.35, ang, roof, L.PRECAST, 0, roof, L.PRECAST, 0);
+          CITY.box(G, x, gy + h, z, w + 0.25, 0.09, d + 0.35, A, roof, L.PRECAST, 0, roof, L.PRECAST, 0);
           CITY.addEdge(x + u[0] * w / 2 - n[0] * d / 2, z + u[1] * w / 2 - n[1] * d / 2, x - u[0] * w / 2 - n[0] * d / 2, z - u[1] * w / 2 - n[1] * d / 2, h, 'b');
         }
         if (f.bench !== false) {
           const b = [x - n[0] * (d / 2 - 0.35), z - n[1] * (d / 2 - 0.35)];
-          CITY.box(G, b[0], gy + 0.42, b[1], w - 0.9, 0.06, 0.4, ang, tt(L.PLASTER_ROUGH, '#7a5436', 0.9), L.PLASTER_ROUGH, FT.PLANKS);
-          for (const s of [-1, 1]) { const q = [b[0] + u[0] * s * (w / 2 - 0.7), b[1] + u[1] * s * (w / 2 - 0.7)]; CITY.box(G, q[0], gy, q[1], 0.07, 0.42, 0.4, ang, steel, L.PRECAST, FT.STEEL); }
+          CITY.box(G, b[0], gy + 0.42, b[1], w - 0.9, 0.06, 0.4, A, tt(L.PLASTER_ROUGH, '#7a5436', 0.9), L.PLASTER_ROUGH, FT.PLANKS);
+          for (const s of [-1, 1]) { const q = [b[0] + u[0] * s * (w / 2 - 0.7), b[1] + u[1] * s * (w / 2 - 0.7)]; CITY.box(G, q[0], gy, q[1], 0.07, 0.42, 0.4, A, steel, L.PRECAST, FT.STEEL); }
         }
-        const fp = [x + u[0] * (w / 2 + 0.5), z + u[1] * (w / 2 + 0.5)];   // stop flag with the stop name
+        const fp = [x + u[0] * (w / 2 + 0.6) + n[0] * (d / 2), z + u[1] * (w / 2 + 0.6) + n[1] * (d / 2)];   // stop flag with the stop name
         CITY.cylinder(G, fp[0], gy, fp[1], 0.04, 2.9, 6, steel, L.PRECAST, FT.STEEL);
         for (const s of [1, -1]) addSign({ c: [fp[0] + n[0] * s * 0.05, gy + 2.6, fp[1] + n[1] * s * 0.05], n: [n[0] * s, n[1] * s], w: 0.62, h: 0.42, preset: 'plate', arg: [f.name || 'Zastávka', '#1b4f9c', 'street'], glow: 0, cut: false });
         CITY.addObst(x, z, Math.max(w, d) * 0.5, 'm');

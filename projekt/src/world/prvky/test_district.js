@@ -70,7 +70,7 @@ export default {
     { p: P(22, 4.3), dir: TO_ROAD_N, t: 'banana', h: 8 },
     { p: P(36, 4.3), dir: 0, t: 'lantern', h: 4.8, color: '#2a2c2e' },
     { p: P(46, 4.3), dir: DIR, t: 'cand2', h: 4.2, color: '#2a2c2e' },
-    { p: P(62, 5.4), dir: TO_ROAD_N, t: 'wallLantern', h: 3.4, color: '#2a2c2e' },
+    { p: P(66, -5.6), dir: TO_ROAD_S, t: 'wallLantern', h: 3.4, color: '#2a2c2e' },
     { p: P(30, 0), dir: DIR, t: 'catenary', h: 6.2 },
   ],
   clearLamps: [[1290, -1450, 1400, -1340]],
@@ -89,8 +89,8 @@ export default {
     { t: 'parking', p: [P(66, -3.6), P(76, -3.6)], w: 0.125, color: 'white' },
   ],
   driveways: [
-    { road: 'Strážnická', p: P(40, -5), w: 4.0, side: 'R', mat: 'pavers', gate: { t: 'swing', color: '#3c3a38', h: 1.7 } },
-    { road: 'Strážnická', p: P(55, -5), w: 3.5, side: 'R', mat: 'concrete', gate: { t: 'slide', color: '#5a6a72', h: 1.6 } },
+    { road: 'Strážnická', p: P(40, -5), w: 4.0, side: 'R', mat: 'concrete', gate: { t: 'swing', color: '#3c3a38', h: 1.7 } },
+    { road: 'Strážnická', p: P(55, -5), w: 3.5, side: 'R', mat: 'setts', gate: { t: 'slide', color: '#5a6a72', h: 1.6 } },
   ],
 
   // ---- fences: slats with visible gaps, and mesh on a 0.4 m plinth
@@ -123,7 +123,7 @@ export default {
     { t: 'phoneBooth', p: P(40, 5.2), dir: TO_ROAD_N },
     { t: 'planter', p: P(44, 4.4), dir: DIR, style: 'round', w: 1.0 },
     { t: 'planter', p: P(47, 4.4), dir: DIR, w: 1.2, d: 0.6 },
-    { t: 'busStop', p: P(58, 5.6), dir: TO_ROAD_N, shelter: true, bench: true, name: 'Skalica, Skúšobná' },
+    { t: 'busStop', p: P(66, 5.8), dir: TO_ROAD_N, shelter: true, bench: true, name: 'Skalica, Skúšobná' },
   ],
 
   // ---- ignored by the renderer, must not break anything
