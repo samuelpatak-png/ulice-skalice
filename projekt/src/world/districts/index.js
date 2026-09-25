@@ -10,8 +10,9 @@ import PZ from './pelisk_zahradna.js';
 import ML from './malleho_lucky.js';
 import NS from './namestie.js';
 import JHM from './jednoradova_horska_mytna.js';
+import C1 from './centrum1.js';
 
-export const DISTRICTS = [PZ, ML, NS, JHM];
+export const DISTRICTS = [PZ, ML, NS, JHM, C1];
 const EXACT = 0.0625;                       // ft flag: colours come from geometry, no random facade accents
 const tt = (layer, hex, k = 1) => tintFor(layer, mulc(col(hex), k));
 
