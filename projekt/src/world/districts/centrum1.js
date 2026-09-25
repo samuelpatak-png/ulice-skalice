@@ -204,6 +204,13 @@ const LAWN_N = [[258.98, -161.0], [260.37, -163.72], [281.81, -152.5], [285.86, 
 const LAWN_S = [[258.78, -154.65], [258.75, -153.26], [273.36, -145.82], [274.28, -146.75]];
 // Spevnená plocha pred bránou dvora úradu práce (s 21.9 → 35.5, 5.0 m od obrubníka po múr) — pokračovanie južného chodníka.
 const YARD_WALK = [[273.41, -143.72], [284.82, -137.91], [284.0, -136.3], [273.39, -141.7], [273.02, -142.96]];
+// Plocha zo žulových kociek na rohu pri G0 (s 55–62, t 4–10, ~42 m²), doplnená prieskumom; presnosť ±0.3 m.
+// Hrana t 4 leží za severným obrubníkom (t 2.4), takže do vozovky Gorkého nezasahuje; pri s 55–55.6 sa západný okraj
+// prekrýva s východným štítom 61000413 (plocha pod domom nie je vidieť). Východná polovica leží v ústí bočnej ulice
+// (OSM way bez mena, w 6.0, os cez s 58.1 t −0.2 → s 65.4 t 36.0) — na satelite je tam jedna súvislá dlažba, viď prvky.md 4.13.
+const SETTS_G0 = [[307.0, -138.1], [313.3, -134.9], [316.0, -140.3], [309.7, -143.4]];
+const SETTS_G0_IN = [[307.27, -138.19], [313.21, -135.17], [315.73, -140.21], [309.79, -143.13]];
+const SETTS_G0_LEM = SETTS_G0.map((a, i) => [a, SETTS_G0[(i + 1) % 4], SETTS_G0_IN[(i + 1) % 4], SETTS_G0_IN[i]]);
 
 // ---------------- ŠTEFÁNIKOVA ----------------
 // clear = koridor ulice s 3.5…136, na juhu po t −11, na severe po t +8 v parkovej časti a po t +19.4 na dláždenej ploche.
@@ -249,9 +256,12 @@ const lots = {
   surfaces: [
     // dvor/parkovisko úradu práce za bránou (s 23.9–35.1, t −8.05…−18): asfalt, nie trávnik
     { ring: [[273.84, -141.48], [283.82, -136.39], [279.3, -127.53], [269.95, -132.29]], m: 'asphalt', c: '#5a5a57', base: true },
-    // plocha z tmavosivých žulových kociek na rohu pri G0, pás ~1.8 m pozdĺž východného štítu 61000413 a okolo záhonu;
-    // šírka je obmedzená tak, aby plocha nezasahovala do vozovky bočnej ulice (od jej osi ostáva > 3.3 m)
-    { ring: [[307.0, -140.5], [311.4, -145.6], [312.76, -144.42], [308.36, -139.32]], m: 'settsDark', c: '#6e6a66', base: true },
+    // Plocha z tmavosivých žulových kociek na rohu pri G0 (s 55–62, t 4–10), okolo východného štítu 61000413 a záhonu.
+    // Vonkajší polygón z prieskumu (±0.3 m) je SETTS_G0; vnútro je zmenšené o 0.2 m (SETTS_G0_IN) a kreslí sa tmavými
+    // kockami, lem tvoria 4 pásy šírky 0.2 m medzi vonkajším a vnútorným polygónom (lichobežníky, rohy na osi uhla,
+    // takže medzi nimi nie je ani medzera, ani prekryv). `setts` a `settsDark` sa líšia iba odtieňom, nie veľkosťou kociek.
+    { ring: SETTS_G0_IN, m: 'settsDark', c: '#6e6a66', base: true },
+    ...SETTS_G0_LEM.map(ring => ({ ring, m: 'setts', base: true })),
     // záhon so štrkom pred východným štítom 61000413 (~0.9 × 2.5 m, biely štrk lemovaný radom žulových kociek)
     { ring: [[309.76, -142.68], [312.46, -143.68], [312.14, -144.52], [309.44, -143.52]], m: 'gravel', c: '#bdb6a8' },
     // Štefánikova: rozšírenie vozovky z kociek na juhu (OSM vozovka je 7.0 m, skutočná 8.7–10.0 m)
@@ -411,7 +421,6 @@ const todo = [
   { t: 'vlajka EÚ na držiaku', p: [306.2, -128.1], note: 's 59, na rohu 61003077 pri vstupe, šikmá žrď, h ≈ 5; + modrá informačná tabuľka ~0.4×0.5 m pri vstupe (s 59.6, h ≈ 2), G0-207 u378–398' },
   { t: 'stĺpik bez značky', p: [258.8, -151.4], note: 'pred súdom s 6.1, sivý, h ≈ 2.5 (G3-207 u433); neisté, či nesie značku otočenú bokom' },
   { t: 'sivá skrinka so strieškou na múre podlubia súdu', p: [258.3, -152.2], note: 'dvojkrídlová ~1.4×0.9 m s plechovou strieškou, na koralovom múre oblúka súdu (G3-207 u440–640 v270–310) – vývesná skrinka súdu' },
-  { t: 'plocha zo žulových kociek na rohu', p: [309.0, -140.0], note: 's 55–62, t 4–10, okolo východného štítu 61000413 a záhonu; tmavosivé kocky #6e6a66, lemované radom väčších kociek (G0-297 u490–800 v390–516, G0-27 u0–250). Kreslený je len pás ~1.8 m pozdĺž štítu (lots.surfaces settsDark), zvyšok by zasiahol vozovku bočnej ulice; lem z väčších kociek chýba' },
   { t: 'malá sivozelená rastlina v záhone', p: [311.8, -144.0], note: 'druhá rastlina v štrkovom záhone pred východným štítom 61000413 vedľa trsu okrasnej trávy (G0-27 u200–335); nízka, sivozelená, druh neurčený — hra nemá vhodný typ, generický ker by bol niekoľkonásobne väčší' },
   { t: 'malá tabuľa so štátnym znakom (súd)', p: [268.8, -145.9], note: 's 17.4, na severnej fasáde súdu vedľa veľkej tabule (G3-207 u60)' },
   { t: 'zelené fólie na spodku okien prízemia Prima banky', p: [265.0, -163.0], note: 's 4–14, typické pre banku; hra nevie farebnú fóliu na výplni okna' },
@@ -458,7 +467,8 @@ const todo = [
   { t: 'ŠT: detaily fasád južného radu', p: [46.0, -137.0], note: '60997383/60999413: profilovaná korunná a kordónová rímsa, štukové suprafenestry a parapetné polia, 6 okien poschodia v osiach s 72.1/73.2/76.1/78.1/81.8/84.1, 2 okná prízemia, dvojkrídlové dvere s nadsvetlíkom s 72.5, 2 strešné okná, satelitná anténa na hrebeni s 72, zvody s 70.5 a 86. 1174039013/61002459: 4 strešné okná s 88.4/91.1/92.9/98.4, pruhovaná markíza s 96.5–102.4 (spodná hrana 2.4 m), 2 výklady, hnedé dvere s 88.2–90.1, 93.4 a 98.8, 2 čierne menu tabule. 61001176/61000307: veľký sedlový vikier nad Raiffeisen, 2 veľké vikiere + 1 strešné okno na východnej časti, 2 balkóny s kovaným zábradlím na rizalite (s 109.2 a 113.2), okná s 104.5/106.5 a 5 okien východnej časti, zvody s 102.4 a 127.3. 60999339: kovový hrot/makovica na vrchole valby, vetracia taška, 2 plagátové tabule, malé okno s 130.3, zvod s 127.3. Hra kreslí iba generický raster okien a holú strešnú rovinu' },
   { t: 'ŠT: detaily fasád severnej strany', p: [10.0, -150.0], note: '60999883: malá vežička s makovicou na hrebeni pri s ≈ 110, komín na západnom štíte, 7–8 prevádzok s tmavými presklenými výkladmi a hnedými dvermi, červený okrúhly znak na fasáde. 60998021: hnedé okná, hnedé drevené dvere, prevádzka na prízemí (presnosť nízka, 25 m cez stromy). 1488770549: do ulice je vidieť iba múr, za ním biely dom so štítom natočeným na VJV – smer hrebeňa neistý, preto bez ang' },
   { t: 'ŠT: radnica 61001746 – južná fasáda nie je jednofarebná', p: [95.0, -160.0], note: 'v Štefánikovej má radnica 4 odlišné úseky: s 4–25 mätovozelená #c3dcc4 (zodpovedá looks v namestie.js), s 25–35.6 krémová prístavba #f0e4c8 so žltými šambránami, s 35.6–57.9 postmoderná časť s 2 arkiermi obloženými červenými šindľovými panelmi a balkónom, s 57.9–69.5 hladká krémová #efe4cc s oblúkovým vchodom. Radnica je v namestie.js a podľa rozhodnutia vedúceho ju tento PR nemení – ide do vetvy stvrt/namestie-oprava' },
-  { t: 'ŠT: ZUŠ 60999034 a zebra cez Jatočnú', p: [45.0, -190.0], note: 'ZUŠ/Ľudová škola umenia (Jatočná 140/4, biela, červená sedlová strecha, na štíte veľká maľba stromu a modrý okrúhly znak) má adresu Jatočná a hľadí do parku → patrí ulici Jatočná, looks sa tu nezapisuje. Rovnako zebra cez ústie Jatočnej (40.6,−165.7)–(45.9,−168.5) = OSM 1012760400 / node 454171252 – hra ju už kreslí z OSM, do crossings centrum1 sa nezapisuje' },
+  { t: 'ŠT: ZUŠ 60999034', p: [45.0, -190.0], note: 'ZUŠ/Ľudová škola umenia (Jatočná 140/4, biela, červená sedlová strecha, na štíte veľká maľba stromu a modrý okrúhly znak) má adresu Jatočná a hľadí do parku → patrí ulici Jatočná, looks sa tu nezapisuje' },
+  { t: 'ŠT: zebra cez ústie Jatočnej patrí ulici Jatočná', p: [43.25, -167.1], note: 'OSM node 454171252 (way 1012760400), od (40.6,−165.7) po (45.9,−168.5), w 2.5, znížené obrubníky; s 73–79, t ≈ 18 od osi Štefánikovej. Hra ju kreslí z OSM (k = 11), takže v hre JE — vidno ju napr. na Š5-333 u415–500. Do `crossings` centrum1 sa podľa rozhodnutia vedúceho nezapisuje, dáta patria ulici Jatočná; kto bude robiť Jatočnú, nech ju zapíše tam s poznámkou „= OSM 454171252“, aby ju tech/prvky nakreslil namiesto OSM zebry a nezdvojil ju' },
   { t: 'ŠT: nezamerané stromy v parku', p: [70.0, -190.0], note: 'listnaté stromy pri pavilóne 60997157 a pri ZUŠ a ďalšie smreky sú 20–60 m od ulice, prieskum ich jednotlivo NEZAMERAL (priemet ±3–5 m). Zapísaných je 15 stromov pri ulici; zvyšok parku necháva štvrť na procedurálnu zeleň z mapy (lots.clear preto do parku nezasahuje)' },
 ];
 

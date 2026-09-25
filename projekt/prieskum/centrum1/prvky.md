@@ -92,7 +92,7 @@ Stav: po **kole 1 opráv Kontrolóra** (kontrolovaný head 3ba4c2c). Zmenené ri
 | 4.10 | Južný chodník pred 61003077, 3.0 m, s 35.5 → 55.5, a dlažba pred schodiskom s 55.5 → 60 | áno | `roads[1].sw[0] = 3.5` (o 0.5 m viac, presah je skrytý pod budovou). |
 | 4.11 | Rigol z 2–3 radov tmavých žulových kociek pozdĺž severného obrubníka, s 1.5–55 | áno | `lots.ribbons[0]`, `m: 'settsDark'`, šírka 0.35 m. |
 | 4.12 | Rovnaký rigol pozdĺž južného obrubníka, s 22–55 (pred súdom s 4–22 zakrytý autami — **neisté**) | áno (iba istá časť) | `lots.ribbons[1]`, s 22–55. Neistý úsek s 4–22 nie je nakreslený, poznámka je v komentári. |
-| 4.13 | Plocha z tmavosivých žulových kociek na rohu pri G0 (s 55–62, t 4–10) | áno (čiastočne) | `lots.surfaces[1]`, `m: 'settsDark'` `#6e6a66` — pás ~1.8 m pozdĺž východného štítu 61000413 a okolo záhonu. Širšia plocha podľa balíka sa nakresliť nedá: od s ≈ 57 ďalej je tam vozovka bočnej ulice (od jej osi ostáva > 3.3 m). Lem z väčších kociek chýba. Celý popis je aj v `todo` — „plocha zo žulových kociek na rohu“. |
+| 4.13 | Plocha z tmavosivých žulových kociek na rohu pri G0 (s 55–62, t 4–10, ~42 m²), lemovaná radom väčších kociek | áno | Celý polygón z doplneného prieskumu: `[[307.0,−138.1],[313.3,−134.9],[316.0,−140.3],[309.7,−143.4]]`, presnosť ±0.3 m. Kreslí sa ako `lots.surfaces` `m: 'settsDark'` `#6e6a66` na polygóne zmenšenom o 0.2 m (`SETTS_G0_IN`) plus **lem**: 4 pásy šírky 0.2 m medzi vonkajším a vnútorným polygónom, `m: 'setts'`. Pásy sú lichobežníky `[von[i], von[i+1], vnút[i+1], vnút[i]]`, rohy ležia na osi uhla, takže medzi nimi nie je ani medzera, ani prekryv. Položka z `todo` tým zanikla a je odstránená. Obmedzenia: `setts` a `settsDark` sú ten istý materiál (L.COBBLE), líšia sa iba odtieňom — „väčšie kocky“ lemu sa zadať nedajú, lem je vidieť ako svetlejší pás. **Vozovka:** hrana t 4 leží za severným obrubníkom Gorkého (t 2.4), do vozovky Gorkého teda plocha nezasahuje (overené renderom G0-297 aj priamym meraním). Zasahuje však do koridoru **bočnej ulice** (OSM way bez mena, k 2, w 6.0, os (307.9,−132.9) → (311.4,−137.3) → (330.8,−161.9)): 32.8 z 42.1 m² polygónu (78 %) leží bližšie než 3.0 m od jej osi a dlažba tam prekryje asfalt. Na satelite `sat_Gorkeho_1.png` je celý roh jedna súvislá dlažba, takže render pôsobí správne (G0-297 sedí veľmi dobre, na G0-27 siahajú kocky do ústia bočnej ulice asi o 1–2 m ďalej než v Street View). Ak má plocha ostať mimo vozovky bočnej ulice, treba oba východné rohy orezať na 3.2 m od jej osi (plocha klesne na ~18 m²) — rozhodnutie nechávam na vedúceho. |
 | 4.16 | Dvor / parkovisko úradu práce za bránou (s 23.9–35.1, t −8…−18): asfalt | áno | `lots.surfaces[0]`, `m: 'asphalt'` `#5a5a57`. Predtým tu bol trávnik z terénu. Rozsah dvora smerom na juh sa zo snímok nedá určiť, polygón je konzervatívny (~11 × 10 m). |
 | 4.14 | Plocha trávnika ako polygón (`lots/areaKinds`) | áno | Riešené cez `lots.islands`, nie cez `areaKinds` — ostrovček má obrubník a správnu výšku, `areaKinds` iba prepisuje značku existujúcej OSM plochy (tu žiadna nie je). |
 | 4.15 | Spomaľovače | — | V úseku nie sú. |
@@ -174,7 +174,7 @@ Poklopy a vpuste sú **v hre nie**, chýbajúci typ: **Poklopy, kanály, uličn�
 | 11.5 | Voľné kvetináče na ulici | — | Nie sú; muškáty sú na oknách (2.10). |
 | 11.6 | Stojan s reklamnou tabuľou pred vchodom 1A (s 47.7 t 4.4) | nie | Do schémy sa nezmestí. Dáta: `todo` — „stojan s reklamnou tabuľou“. |
 
-Ostatné položky `todo` sú vymenované pri 1.5, 1.6, 1.7, 1.8, 2.5, 2.7, 2.8, 2.13, 2.14, 2.17, 2.18, 2.19, 4.3, 4.13, 6.6 a 11.4b. Spolu má `todo` 25 položiek.
+Ostatné položky `todo` sú vymenované pri 1.5, 1.6, 1.7, 1.8, 2.5, 2.7, 2.8, 2.13, 2.14, 2.17, 2.18, 2.19, 4.3, 6.6 a 11.4b. Časť A má 24 položiek `todo` (položka „plocha zo žulových kociek na rohu“ zanikla, plocha sa už kreslí — viď 4.13).
 
 ## 12. Parkovanie, stĺpy vedenia
 
@@ -194,7 +194,8 @@ kalibrované polohy kamier, čas v hre 13:12 (`?t=0.55`). Skript: `prieskum/cent
 1. **Osvetlenie.** Snímky sú zamračené (október), hra má vždy slnko. Gorkého vedie VJV–ZSZ, takže severná strana (líce 207°) sa dá nasvietiť, ale južná strana (líce 27°, súd a úrad práce) je v hre vždy v tieni a jej farba vychádza tmavšia a sýtejšia než na snímkach. Časom dňa sa to nedá vyriešiť.
 2. **Rozmiestnenie a veľkosť okien.** Hra generuje osi okien sama; 61000413 má v hre menšie a hustejšie okná než v skutočnosti (6 veľkých s hnedými rámami), 61003077 má 3 okná na podlažie namiesto 5 + úzke. Nedá sa zadať.
 3. **Dvojfarebnosť 61003077** (biele plochy prízemia, lizény, frontóniky, kruhové okno vo východnom štíte) chýba, budova je celokoralová.
-4. **Zámková dlažba** chodníkov je v hre jedna sivá textúra bez červeného dekoru z kosoštvorcov.
+4. **Zámková dlažba** chodníkov je v hre jedna sivá textúra bez červeného dekoru z kosoštvorcov. Plocha zo žulových kociek na rohu pri G0 je už nakreslená celá aj s lemom (4.13),
+   lem je však iba svetlejší pás tých istých kociek — „väčšie kocky“ sa zadať nedajú.
 5. **Trs okrasnej trávy** v záhone je vykreslený ako generický ker (`k 35`) asi 1,3–2,2 m vysoký namiesto 1,1 m (pozri 11.4); malá sivozelená rastlina vedľa neho chýba.
 6. **Výška lámp** je 3.7 m namiesto 4.8 m (typ `lantern` má pevnú výšku), poloha aj tvar sedia.
 7. **Nárožné domy z `namestie.js`:** presklené výklady na prízemí Prima banky a súdu sú opravené doplnením `ft` do ich `looks` (viď 1.11). Ostatné rozdiely týchto dvoch domov (súd je v hre koralový, v skutočnosti bielo‑sivý s koralovým soklom, a nemá podlubie) vyplývajú z ich `looks` v `namestie.js` a tento PR ich nemení.
@@ -345,7 +346,7 @@ chýbajúci typ: **Zvislé dopravné značky**. Dáta sú v `trafficSigns`, `on:
 |---|---|---|---|
 | Š7.1 | Zebra pri námestí, s 5–7.5, w 2.5, znížené obrubníky; OSM 7850321812 | áno | Hra ju kreslí automaticky z OSM (`k = 11`) a na renderi Š0‑254 aj Š1‑67 je dobre viditeľná (leží mimo dlažby PLAZA, na rozdiel od zebry na Gorkého). Zapísaná je aj ako `crossings[1]` s poznámkou „= OSM 7850321812“ — podľa schémy tech/prvky pri kreslení potlačí OSM zebru do 3 m, takže dvojmo nebude. Odchýlka stredu zápisu od OSM je 0.3 m. |
 | Š7.2 | Zebra pri Potočnej, s 134.3–136.8, w 2.5; OSM 9343609687 | áno | To isté, `crossings[2]`, odchýlka stredu 1.0 m. Hranica úsekov — s Potočnou neduplikovať. |
-| Š7.3 | Zebra cez ústie Jatočnej; OSM 1012760400 / node 454171252 | áno | Hra ju kreslí z OSM. Do `crossings` centrum1 sa podľa rozhodnutia vedúceho **nezapisuje**, patrí ulici Jatočná. Poznámka je v `todo`. |
+| Š7.3 | Zebra cez ústie Jatočnej, od `(40.6,−165.7)` po `(45.9,−168.5)`, w 2.5, znížené obrubníky; OSM node **454171252** (way 1012760400) | **áno (z OSM), dáta patria Jatočnej** | Hra ju kreslí automaticky z mapy (`k = 11`), v hre teda je — vidno ju na renderi Š5‑333 u415–500. Do `crossings` centrum1 sa podľa rozhodnutia vedúceho **nezapisuje**; zapíše ju ulica Jatočná s poznámkou „= OSM 454171252“, aby ju tech/prvky nakreslil namiesto OSM zebry a nezdvojil ju. V centrum1 je to zaznamenané ako samostatná položka `todo` — „ŠT: zebra cez ústie Jatočnej patrí ulici Jatočná“. |
 | Š7.4 | Iné vodorovné značenie | — | Okrem zebier žiadne (ani parkovacie čiary, ani stredová čiara) — overené na všetkých pozdĺžnych snímkach. `markings` pre Štefánikovu preto nie je. Nápis „Štefánikova“ na vozovke v snímkach je popis Google. |
 
 ## Š8. Tabuľky s názvom ulice (`nameplates`)
@@ -389,11 +390,11 @@ chýbajúci typ: **Zvislé dopravné značky**. Dáta sú v `trafficSigns`, `on:
 
 ## Š12. Položky `todo` (čo sa do schémy nezmestí)
 
-V `centrum1.js` je 23 položiek `todo` s prefixom „ŠT:“. Prvých 13 je priamo zo sekcie `### todo` balíka
+V `centrum1.js` je 24 položiek `todo` s prefixom „ŠT:“. Prvých 13 je priamo zo sekcie `### todo` balíka
 (kiosk, stojan na bicykle, orientačný smerovník, cyklosmerovník, oranžová informačná tabuľa, informačná tabuľa s mapou,
 Obecná studňa, socha Vinár, 2 sivé kamenné stély, 3 čierne stĺpiky, letná terasa, reklamné stojany A, food truck),
-zvyšných 10 doplnil Stavbár (kvetinový záhon, pozdĺžne státie, dom chýbajúci v OSM aj s poznámkou o nepriechodnom prejazde,
-prejazd 60999413, dvojfarebnosť bloku, detaily fasád juh a sever, radnica, ZUŠ + zebra cez Jatočnú, nezamerané stromy parku).
+zvyšných 11 doplnil Stavbár (kvetinový záhon, pozdĺžne státie, dom chýbajúci v OSM aj s poznámkou o nepriechodnom prejazde,
+prejazd 60999413, dvojfarebnosť bloku, detaily fasád juh a sever, radnica, ZUŠ, zebra cez ústie Jatočnej, nezamerané stromy parku).
 Pri každej je uvedený chýbajúci typ prvku menom.
 
 Poznámka: Obecná studňa (OSM `man_made=water_well` 6512779637) je v hre vidieť — kreslí ju generátor z mapy,
