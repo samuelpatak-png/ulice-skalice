@@ -4,13 +4,16 @@
 import { col, mulc, pip } from '../../core/util.js';
 import { L, FT, FLAG, tintFor } from '../../render/materials.js';
 import { CITY } from '../city.js';
+import { SURF_MATS, treeExtra, pushTree } from '../prvky/index.js';
 
 const tt = (layer, hex, k = 1) => tintFor(layer, mulc(col(hex), k));
 export const frame = (F) => { const n = [-F.u[1], F.u[0]]; return { W: (s, d) => [F.o[0] + F.u[0] * s + n[0] * d, F.o[1] + F.u[1] * s + n[1] * d], u: F.u, n }; };
+// asphalt, pavers, setts, settsDark, stone and concrete come from the shared table, so a lots surface and a
+// roads[].surface with the same name are the identical material, texture and tint (world/prvky/surfaces.js)
 const MATS = {
-  asphalt: [L.ASPHALT, '#5a5a57'], asphaltL: [L.ASPHALT, '#686865'], pavers: [L.PAVERS, '#8f8e8a'], walk: [L.PAVERS, '#a0948b'],
+  asphaltL: [L.ASPHALT, '#686865'], walk: [L.PAVERS, '#a0948b'],
   grass: [L.GRASS, '#56743a'], redline: [L.PAVERS, '#8a4535'], white: [L.ASPHALT, '#c9c9c3'], gravel: [L.DIRT, '#8b8275'],
-  setts: [L.COBBLE, '#77726a'], settsDark: [L.COBBLE, '#4f4d4a'], stone: [L.STONE, '#c9c2b2'],
+  ...SURF_MATS,
 };
 const rect = (W, s, d) => [W(s[0], d[0]), W(s[1], d[0]), W(s[1], d[1]), W(s[0], d[1])];
 // rounded rectangle in frame coordinates (r clamps to half the short side: fully round ends)
@@ -58,7 +61,11 @@ export function applyLots(D, Z, over, R) {
   }
   D.cars = cars;
   if (LT.clearLamps) { const l = []; for (let i = 0; i < D.lamps.length; i += 3) if (!inClear(D.lamps[i] / 10, D.lamps[i + 1] / 10)) l.push(D.lamps[i], D.lamps[i + 1], D.lamps[i + 2]); D.lamps = l; }
-  for (const t of LT.trees || []) { const p = t.p || F[t.f].W(t.s, t.d); trees.push(Math.round(p[0] * 10), Math.round(p[1] * 10), t.k); }
+  // a tree with a surveyed height / scale / rotation keeps its exact values (prvky), the rest stay packed
+  for (const t of LT.trees || []) {
+    const p = t.p || F[t.f].W(t.s, t.d), ex = treeExtra({ ...t, p }, true);
+    if (ex) pushTree(D, ex); else trees.push(Math.round(p[0] * 10), Math.round(p[1] * 10), t.k);
+  }
   for (const is of LT.islands || []) for (const b of is.bushes || []) { const p = is.f ? F[is.f].W(b[0], b[1]) : b; trees.push(Math.round(p[0] * 10), Math.round(p[1] * 10), b[2] ?? 5); }
   D.t = trees;
   D.lampsX = D.lampsX || [];

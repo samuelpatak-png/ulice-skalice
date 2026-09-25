@@ -1292,13 +1292,16 @@ export async function buildVegetation(scene, trees, { groundH = () => 0, seed = 
     const h1 = hashU(i, seed), h2 = hashU(i, seed + 1), h3 = hashU(i, seed + 2), h4 = hashU(i, seed + 3), h5 = hashU(i, seed + 4);
     const vj = force >= 0 ? force : h1 < 0.55 ? dom : pick(h2);
     const vid = kindVar[k][vj];
-    const sc = 0.75 + 0.55 * Math.pow(h3, 1.2);
+    // t.sc = scale (1 = a normal grown tree), t.h = height in metres, t.dir = degrees clockwise from north;
+    // without them the size and the rotation stay random, as before
+    const sc = t.sc != null ? +t.sc : t.h != null ? +t.h / (variants[vid].H || 1) : 0.75 + 0.55 * Math.pow(h3, 1.2);
     const yellow = h4 < 0.05 && k !== 1 ? 0.25 + 0.45 * hashU(i, seed + 6) : 0;
     const hue = Math.round(clamp(127.5 + (hashU(i, seed + 7) * 2 - 1) * 120, 0, 255));
     const bri = Math.round(hashU(i, seed + 8) * 255);
     const pk = hue * 65536 + bri * 256 + Math.round(yellow * 255);
     const g = k === 5 ? 0 : k === 3 ? 1 : 2;
-    rec.push({ x, y: groundH(x, z), z, yaw: h5 * TAU, sc, pk, vid, k, kh: hashU(i, seed + 9), cx: Math.floor(x / CELL), cz: Math.floor(z / CELL), g });
+    const yaw = t.dir != null ? -t.dir * Math.PI / 180 : h5 * TAU;
+    rec.push({ x, y: groundH(x, z), z, yaw, sc, pk, vid, k, kh: hashU(i, seed + 9), cx: Math.floor(x / CELL), cz: Math.floor(z / CELL), g });
   }
   rec.sort((a, b) => a.cx - b.cx || a.cz - b.cz || a.g - b.g || a.kh - b.kh);
   const TX = new Float32Array(N), TY = new Float32Array(N), TZ = new Float32Array(N), YAW = new Float32Array(N), SC = new Float32Array(N), PK = new Float32Array(N), KH = new Float32Array(N);
