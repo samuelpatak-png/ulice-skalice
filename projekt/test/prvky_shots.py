@@ -35,6 +35,7 @@ SETS = {
         ('prvky-vjazd', P(46, 3), 1.7, 274, -3),           # vjazdy, brány (slat), plot na podmurovke
         ('prvky-mobiliar', P(62, 8), 1.7, 225, -4),        # koše, hydrant, skrinky, búdka, kvetináče, zastávka
         ('prvky-brana', P(40, 2.5), 1.7, 308, -6),         # vjazd zblízka: znížený obrubník, povrch, brána
+        ('prvky-povrchy', P(55, 2.5), 1.7, 308, -8),       # settsDark: vozovka = vjazd = plocha za bránou
         ('prvky-zastavka', P(66, -1.5), 1.7, 128, 0),      # zastávka MHD, semafory, lampy
         ('prvky-zhora', P(2, 0), 13.0, 38, -26),           # celá scéna zhora: povrchy vozovky, značenie
     ],

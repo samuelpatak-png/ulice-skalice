@@ -90,8 +90,13 @@ export default {
   ],
   driveways: [
     { road: 'Strážnická', p: P(40, -5), w: 4.0, side: 'R', mat: 'concrete', gate: { t: 'swing', color: '#3c3a38', h: 1.7 } },
-    { road: 'Strážnická', p: P(55, -5), w: 3.5, side: 'R', mat: 'setts', gate: { t: 'slide', color: '#5a6a72', h: 1.6 } },
+    { road: 'Strážnická', p: P(55, -5), w: 3.5, side: 'R', mat: 'settsDark', gate: { t: 'slide', color: '#5a6a72', h: 1.6 } },
   ],
+  // the yard behind the sliding gate: lots.surfaces with m 'settsDark' has to match the carriageway surface
+  // 'settsDark' of the second roads box and the drive across the sidewalk exactly (one shared table)
+  lots: {
+    surfaces: [{ ring: [P(51, -5.7), P(60, -5.7), P(60, -12), P(51, -12)], m: 'settsDark', base: true }],
+  },
 
   // ---- fences: slats with visible gaps, and mesh on a 0.4 m plinth
   fences: [
