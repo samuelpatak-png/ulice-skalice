@@ -1,0 +1,35 @@
+# Horská north (x along street; fence at the street line unless noted)
+541-596 Budvar corner lawn, no fence (public grass with ditch)
+596-609 block: grey concrete block wall with block pillars h1.8
+609-614 sheet brown gate h2.0
+615-620 wall pink #d98c7a h2.0
+620-632 wall ochre #d9b98a h2.0
+632-636 wood brown double gate h2.0
+636-638 wall ochre
+638-641 sheet grey galvanised h1.9
+641-653 panel precast h1.8
+653- 61001653 pub (salmon on its west side!)
+653-666 pub 61001653: west wall salmon #dca07c; terrace tent in front (white canvas, dark roof) x657-671, 3 m deep
+667-677 NEW HOUSE missing in OSM: beige #e6d2b0 with brick ground part, orange roof #d7663b skylights, 1.5 storey, gable ends E/W, ~9 m back
+671-675 low wall covered with red creeper h1.3 (in front of new house)
+675-680 open gravel pull-in (car)
+680-685 mesh green h1.5 with green gate
+685-690 lean-to timber shed (open garage) at the line
+690-745 barns at the street line (61000143 pink, 61003912, 60997440...) no fence
+727-731 sheet maroon #6e3a32 h2.2 (in front of OSM 60997440 which covers barn+yard) - clipped by building anyway
+745-785 barns/white shop 61004252 at the line
+785-788 open (paved entrance)
+788-792 gate anthracite aluminium slats #4a4d52 h1.6 (driveway of 106082839, herringbone grey pavers)
+792-808 stoneblock: grey stone-look block fence #9a9894 h1.5 with pillars
+808-813 open lawn/flower beds (in front of 872005479)
+813-817 drystone: natural stone wall #b09a7c h1.1
+817-826 wood: brown vertical boards #6a3f2c h1.8 (property 106082598 / green house)
+826-828 stone pillar + brown garage gate of green house 106082690
+828-841 open paved parking in front of green house 106082690 (no fence)
+841-853 garage 106082785 at the line
+853-866 open: grass, parked car, low gabion/woodpile
+866-882 wood weathered grey boards #7d776c h1.8 (house 106082598 behind, big walnut tree x~872)
+882-884 bushes
+884-891 garage 106082959 at the line (beige + grey sheet gate)
+891-896 low stone wall h0.8
+896-907 house 106083006 white

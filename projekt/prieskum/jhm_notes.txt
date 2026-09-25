@@ -1,0 +1,90 @@
+# id | wall | floors | roof type | roof colour | note
+60998087 | #e6bea2 | 1 | gable | #8e4a36 | Mýtna 15, salmon, brown gate
+60997144 | #eeede8 | 1.5 | gable | #7a2e28 | Mýtna 11 white, skylights, brick front
+60998433 | #d9be8c | 1 | gable | #66615b | Mýtna ochre, grey roof
+1113376389 | #e8dcc4 | 1.5 | gable | #4a3a33 | Mýtna 9 cream, dormer
+60999998 | #e3b574 | 1 | gable | #9c4a36 | Mýtna/Horská corner ochre, arched gable windows, stone base
+60997815 | #ebe9e3 | 1 | gable | #b34a30 | fire station U Hasičov long white
+60999230 | #5b3a2e | 1.5 | gable | #2c2d30 | pub Budvar, dark roof, red banners
+60998195 | #e2896f | 2 | gable | #7a3a2e | Horská 6? coral, balconies
+60999267 | #c3c4c2 | 2 | gable | #b04a32 | grey house red roof
+60997520 | #e2c79c | 1.5 | gable | #4a3f3a | sand + brick pilasters, dormers
+60999142 | #d97a6c | 1 | flat | #6a6560 | modern pink flat-roof behind block fence
+61002147 | #e6cf5c | 2 | gable | #3c3d40 | yellow with dark grey panels, dormers
+61003149 | #dcc5a6 | 2 | gable | #6a3a2e | beige with brick bands
+60998546 | #e9b9a3 | 1 | hip | #6e4c40 | pink single storey
+60998788 | #e88a6c | 2 | gable | #564842 | salmon 2-storey
+61001653 | #ecebe6 | 1 | gable | #3a3a3c | pub U Viktora (tent terrace, green sign)
+61000143 | #e0a89c | 1 | gable | #9a5642 | old pink barn, big brown gate
+61003912 | #e0a89c | 1 | gable | #9a5642 | pink barn continued
+60997811 | #e28b62 | 1.5 | gable | #5a3f36 | orange house, skylights, stone fence
+60999775 | #dcdad4 | 1 | gable | #9a9c9e | long workshop, grey metal roof
+61001313 | #e8d6b8 | 1 | gable | #a8452f | cream single storey
+60997440 | #e3a79d | 1 | gable | #8a5a48 | pink barns + wall with brown steel gate
+60997661 | #d4ada5 | 1 | gable | #a3553f | pink/grey plaster barn, gable to street
+61004148 | #c9b99a | 1 | gable | #b02a24 | loam-plaster barn, new red metal roof, corrugated gate
+61004252 | #eee9df | 1 | gable | #d0692c | white, orange roof, sign
+60997386 | #e3c898 | 1 | gable | #b5553d | sand single storey, timber porch
+60997888 | #cfc1a2 | 2 | hip | #6b5a4e | 2-storey beige, low roof
+106082839 | #aeb2b6 | 1 | gable | #3e4044 | grey modern, grey steel gate, stone-look block fence
+106082828 | #cbc2b2 | 2 | hip | #6a5e56 | 2-storey beige old
+106082580 | #a3a7ab | 2 | flat | #5e6064 | grey modern cube
+872005479 | #cfd0cf | 1 | gable | #333538 | grey modern, solar panels
+106082690 | #a9c48c | 1.5 | gable | #d9683a | green, orange roof
+106082486 | #dcbab7 | 2 | gable | #7a4a3e | pink 2-storey, balcony
+106082785 | #bdbec0 | 1 | flat | #6a6c70 | grey garage-house, grey sectional door
+106082860 | #d0a877 | 2 | gable | #6e3e32 | tan 2-storey, balcony
+106082738 | #cac8c3 | 2 | gable | #6a6a6a | grey-white 2-storey
+106082533 | #c49c6e | 2 | gable | #5e5a58 | tan 2-storey, metal roof
+106082598 | #e8e6e0 | 1 | gable | #c0492f | white, behind timber fence
+106082959 | #c8bdb0 | 1 | flat | #6a6560 | garage, light blue doors
+106083006 | #efeee9 | 1.5 | gable | #b85a3e | white, gable to street, old white wall
+1308389668 | #ebebea | 1 | flat | #5e6064 | garage row white
+1308389670 | #ebebea | 1 | flat | #5e6064 | garage row white
+1308389669 | #ebebea | 1 | flat | #5e6064 | garage row white
+1308389666 | #ebebea | 1 | flat | #5e6064 | garage row white
+1308389667 | #ebebea | 1 | flat | #5e6064 | garage row white
+106082625 | #c98270 | 1 | hip | #6b4a40 | salmon single storey
+106082684 | #cfc4b0 | 2 | gable | #5e5652 | beige 2-storey
+106082994 | #e8e0c8 | 1 | gable | #6b4a40 | cream single storey
+# Horská east, north side: modern terraced houses, light grey/white walls, orange-red tile roofs with skylights, garages
+106082995 | #dcdedd | 1.5 | gable | #d7663b | terrace
+106082549 | #e9e8e2 | 1.5 | gable | #d7663b | terrace
+106082634 | #dcdedd | 1.5 | gable | #d7663b | terrace
+106082911 | #e9e8e2 | 1.5 | gable | #d7663b | terrace
+1157011755 | #dcdedd | 1.5 | gable | #d7663b | terrace
+106082812 | #e9e8e2 | 1.5 | gable | #d7663b | terrace
+106082556 | #e3d2bc | 1.5 | gable | #d7663b | terrace
+106082540 | #e9e8e2 | 1.5 | gable | #d7663b | terrace
+# south side: 1970s two-storey cubes with low roofs
+106082916 | #d6ccb8 | 2 | hip | #7a7470 | beige cube
+106082736 | #bdb9b2 | 2 | hip | #6a6664 | grey cube
+106082638 | #cbb8a0 | 2 | hip | #6e6a66 | beige cube, balconies
+106082457 | #e6a262 | 2 | hip | #8a8c8e | apricot cube, grey metal hip roof
+106082809 | #cfc3ad | 2 | hip | #7a7470 | beige cube
+106082629 | #b8b6ae | 1 | gable | #8e4a38 | old grey rough-plaster hall, eave 5.5, two chimneys
+106082476 | #d2c3a8 | 1 | hip | #6e4a3e | beige bungalow, block fence red gate
+608455875 | #e6dfd0 | 2 | gable | #b8452f | cream 2-storey, brick ground floor
+106082454 | #d8cbb4 | 1 | gable | #7a5044 | beige
+61002822 | #e38b74 | 1.5 | gable | #5e4238 | salmon, dormers
+61000102 | #bcc4cc | 1 | gable | #9c4a36 | grey-blue café, timber fence, yellow umbrellas
+60999250 | #eba796 | 1 | gable | #b8503a | pink
+60997058 | #dcdfd4 | 2 | gable | #3d3e40 | civic, dark roof with big dormers
+60997289 | #c05848 | 1.5 | gable | #b04a36 | terracotta, gable to street, skylights
+60998242 | #cfc6b6 | 1.5 | gable | #6e5a4e | beige, garage, mural fence
+61000081 | #e6e2d6 | 1 | gable | #b8503a | cream single storey
+61001978 | #ece8df | 1 | gable | #c85a3c | white single storey, brown gate
+60999710 | #e8e8e4 | 1.5 | gable | #3a3c40 | modern white + dark stone cladding, dormers
+60998142 | #e4d4bc | 1 | gable | #7a5a4c | beige
+61000473 | #eeece6 | 1.5 | gable | #b04a34 | white + brick-slip section, skylights, brown garage door
+60997527 | #e6e4de | 1 | gable | #a84a36 | white single storey, brown garage door
+61000366 | #d9cfc2 | 1 | gable | #a85038 | old peeling plaster, red double door
+61000658 | #e6e2da | 1 | gable | #7a4e40 | white outbuilding
+60998967 | #efefec | 1 | gable | #6a5a50 | Brčkov pub, white, eave 4
+60998585 | #c4704e | 1 | gable | #3c3d40 | new brick house under construction, dark roof
+61004181 | #e0a8a6 | 2 | gable | #4e4442 | pink 2-storey, brick base
+60997248 | #e08a48 | 1 | hip | #6a4638 | orange, brick-slip fence
+61001219 | #dccab0 | 1.5 | gable | #4a3c36 | beige, dormers
+60997047 | #e8e6e0 | 1 | gable | #b0503a | white behind grey block fence
+60999108 | #e4d8c0 | 2 | gable | #b0503a | beige 2-storey behind gate
+60997014 | #eeeae0 | 1 | gable | #a84a36 | (not seen) 

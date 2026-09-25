@@ -1,0 +1,6 @@
+node_modules/
+projekt/dist/
+projekt/public/assets/
+.DS_Store
+__pycache__/
+*.pyc

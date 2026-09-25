@@ -1,0 +1,158 @@
+<title>Ulice Skalice</title>
+<meta name="description" content="Skalica ako otvorený svet: prechádzaj sa a jazdi po skutočných uliciach mesta.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,800&display=swap">
+<style>
+:root {
+  color-scheme: dark;
+  --ink: #f1eee6; --ink-2: #b9b4a8; --ink-3: #7d796f;
+  --panel: rgba(14, 15, 17, 0.72); --panel-solid: #121315; --line: rgba(241, 238, 230, 0.14);
+  --ruby: #b3263a; --ruby-2: #e0475c; --gold: #f2c230;
+  --display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --body: "Barlow", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background: #0b0c0d; color: var(--ink); font-family: var(--body); }
+canvas#gl { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; outline: none; }
+kbd { font-family: var(--display); font-weight: 700; font-size: 0.95em; display: inline-block; min-width: 1.45em; padding: 0.05em 0.4em; border-radius: 4px; background: var(--ink); color: #111; text-align: center; margin-right: 0.35em; }
+
+/* ---------------------------------------------------------------- loading */
+#load { position: fixed; inset: 0; z-index: 30; display: grid; grid-template-rows: 1fr auto; background:
+  radial-gradient(120% 90% at 80% 10%, rgba(179, 38, 58, 0.22), transparent 60%), linear-gradient(160deg, #15171a 0%, #0b0c0d 70%); overflow: auto; }
+#load .inner { align-self: center; width: min(1080px, 100% - 32px); margin: 0 auto; padding-block: 32px; display: grid; grid-template-columns: 1.25fr 1fr; gap: 48px; align-items: end; }
+#load h1 { font-family: var(--display); font-style: italic; font-weight: 800; font-size: clamp(56px, 11vw, 132px); line-height: 0.84; letter-spacing: -0.01em; margin: 0; text-transform: uppercase; text-wrap: balance; }
+#load h1 span { display: block; color: var(--ruby-2); }
+#load .sub { margin: 18px 0 0; font-size: 17px; color: var(--ink-2); max-width: 44ch; line-height: 1.45; }
+#load .bar { margin-top: 30px; height: 4px; background: rgba(255, 255, 255, 0.08); border-radius: 2px; overflow: hidden; }
+#load .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--ruby), var(--ruby-2)); transition: width 0.25s; }
+#load-step { margin-top: 10px; font: 600 13px/1.3 var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+#start { margin-top: 26px; font: 800 22px/1 var(--display); letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: var(--ruby); border: 0; border-radius: 6px; padding: 16px 30px; cursor: pointer; }
+#start:hover, #start:focus-visible { background: var(--ruby-2); outline: 2px solid var(--ink); outline-offset: 3px; }
+.side { border-left: 1px solid var(--line); padding-left: 28px; }
+.side h2 { font: 700 13px/1 var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 14px; }
+.keys { display: grid; grid-template-columns: auto 1fr; gap: 9px 14px; font-size: 14px; color: var(--ink-2); align-items: center; }
+.keys b { font-weight: 600; color: var(--ink); white-space: nowrap; }
+#tip { margin-top: 26px; font-size: 14px; line-height: 1.5; color: var(--ink-2); min-height: 4.5em; }
+#tip strong { display: block; font: 700 12px/1 var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 7px; }
+#load footer { padding: 14px 16px; font-size: 11.5px; color: var(--ink-3); text-align: center; }
+#load footer a { color: var(--ink-2); }
+@media (max-width: 760px) { #load .inner { grid-template-columns: 1fr; gap: 28px; } .side { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 20px; } }
+
+/* ---------------------------------------------------------------- HUD */
+#hud { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+#hud[hidden] { display: none !important; }
+#mm-wrap { position: absolute; left: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); width: 290px; height: 186px; border-radius: 10px; overflow: hidden;
+  box-shadow: 0 0 0 3px rgba(10, 11, 12, 0.85), 0 8px 26px rgba(0, 0, 0, 0.45); }
+#minimap { width: 100%; height: 100%; display: block; }
+#wp-dist { position: absolute; right: 8px; top: 8px; font: 700 14px/1 var(--display); background: rgba(0, 0, 0, 0.6); color: var(--gold); padding: 4px 7px; border-radius: 4px; }
+#clock { position: absolute; right: 26px; top: calc(20px + env(safe-area-inset-top, 0px)); font: 700 30px/1 var(--display); letter-spacing: 0.03em; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6); font-variant-numeric: tabular-nums; }
+#loc { position: absolute; right: 26px; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); text-align: right; opacity: 0; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); }
+#loc.show { animation: locpop 5s ease forwards; }
+#loc-street { font: italic 800 34px/1 var(--display); text-transform: uppercase; letter-spacing: 0.01em; }
+#loc-area { font: 600 16px/1.2 var(--display); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); margin-top: 4px; }
+@keyframes locpop { 0% { opacity: 0; transform: translateY(8px); } 8%, 80% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+#speedo { position: absolute; right: 26px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); text-align: right; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7); }
+#spd { font: 800 64px/0.9 var(--display); font-variant-numeric: tabular-nums; }
+#speedo small { font: 700 15px/1 var(--display); letter-spacing: 0.12em; color: var(--ink-2); margin-left: 6px; }
+#gear { display: inline-block; margin-left: 10px; font: 800 22px/1 var(--display); color: var(--gold); }
+#prompt { position: absolute; left: 50%; top: 62%; transform: translateX(-50%); background: var(--panel); padding: 9px 14px; border-radius: 6px; font: 600 17px/1 var(--display); letter-spacing: 0.03em; }
+#toast { position: absolute; left: 22px; top: calc(20px + env(safe-area-inset-top, 0px)); max-width: 340px; background: var(--panel); border-left: 3px solid var(--ruby-2); padding: 10px 14px; font-size: 14px; line-height: 1.4; border-radius: 0 6px 6px 0; }
+#crosshair { position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px; background: rgba(255, 255, 255, 0.6); border-radius: 50%; display: none; }
+
+/* ---------------------------------------------------------------- map & menu */
+#mapview { position: fixed; inset: 0; z-index: 20; background: #1e2226; }
+#bigmap { width: 100%; height: 100%; display: block; cursor: crosshair; touch-action: none; }
+.mapbar { position: absolute; left: 16px; right: 16px; top: calc(16px + env(safe-area-inset-top, 0px)); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; pointer-events: none; }
+.mapbar h2 { font: italic 800 30px/1 var(--display); text-transform: uppercase; margin: 0 auto 0 0; text-shadow: 0 2px 8px #000; }
+.mapbar p { flex-basis: 100%; margin: 0; font-size: 13px; color: var(--ink-2); text-shadow: 0 1px 4px #000; }
+.btn { pointer-events: auto; font: 700 15px/1 var(--display); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); background: var(--panel-solid); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; cursor: pointer; }
+.btn:hover, .btn:focus-visible { border-color: var(--ink-2); outline: none; }
+.btn.on { background: var(--ruby); border-color: var(--ruby); }
+#menu { position: fixed; inset: 0; z-index: 25; display: grid; place-items: center; background: rgba(8, 9, 10, 0.72); backdrop-filter: blur(6px); padding: 16px; }
+#menu .card { width: min(460px, 100%); background: var(--panel-solid); border: 1px solid var(--line); border-radius: 10px; padding: 24px; display: grid; gap: 18px; }
+#menu h2 { font: italic 800 36px/1 var(--display); text-transform: uppercase; margin: 0; }
+#menu .row { display: grid; gap: 8px; }
+#menu .row > span { font: 700 12px/1 var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+#menu .seg { display: flex; gap: 8px; flex-wrap: wrap; }
+#menu .credits { font-size: 12px; color: var(--ink-3); line-height: 1.5; }
+#menu .credits a { color: var(--ink-2); }
+
+/* touch controls */
+#touch { position: fixed; inset: 0; pointer-events: none; z-index: 11; display: none; }
+.touch #touch { display: block; }
+#touch .tb { pointer-events: auto; position: absolute; width: 58px; height: 58px; border-radius: 50%; background: rgba(14, 15, 17, 0.6); border: 1px solid var(--line); color: var(--ink); font: 800 18px/58px var(--display); text-align: center; }
+.touch #mm-wrap { width: 180px; height: 120px; left: 12px; top: calc(12px + env(safe-area-inset-top, 0px)); bottom: auto; }
+.touch #clock { font-size: 22px; }
+@media (prefers-reduced-motion: reduce) { #loc.show { animation-duration: 0.01s; opacity: 1; } }
+</style>
+
+<canvas id="gl" tabindex="0" aria-label="Herný svet Skalice"></canvas>
+
+<section id="load">
+  <div class="inner">
+    <div>
+      <h1>Ulice <span>Skalice</span></h1>
+      <p class="sub">Skutočná Skalica postavená z mapových dát OpenStreetMap: námestie, Rotunda, paneláky na Sídlisku, obchodné centrá aj vinice za mestom. Prechádzaj sa alebo jazdi.</p>
+      <div class="bar"><i id="load-bar"></i></div>
+      <div id="load-step">Pripravujem…</div>
+      <button id="start" hidden>Vstúpiť do mesta</button>
+    </div>
+    <div class="side">
+      <h2>Ovládanie</h2>
+      <div class="keys">
+        <b><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></b><span>chôdza / plyn, brzda, zatáčanie</span>
+        <b><kbd>Shift</kbd></b><span>beh / turbo</span>
+        <b><kbd>F</kbd></b><span>nastúpiť / vystúpiť z auta</span>
+        <b><kbd>Space</kbd></b><span>ručná brzda (drift)</span>
+        <b>myš</b><span>kamera (klik uzamkne myš)</span>
+        <b><kbd>M</kbd></b><span>mapa, cieľ, teleport</span>
+        <b><kbd>N</kbd></b><span>posunúť čas (deň → noc)</span>
+        <b><kbd>H</kbd> <kbd>R</kbd> <kbd>C</kbd></b><span>klaksón, rádio, vzdialenosť kamery</span>
+        <b><kbd>Esc</kbd></b><span>menu a kvalita grafiky</span>
+      </div>
+      <div id="tip"></div>
+    </div>
+  </div>
+  <footer>Mapové dáta © prispievatelia <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> (ODbL) · textúry a oblohy <a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a> (CC0) · three.js, N8AO (MIT)</footer>
+</section>
+
+<div id="hud" hidden>
+  <div id="mm-wrap"><canvas id="minimap"></canvas><div id="wp-dist" hidden></div></div>
+  <div id="clock"></div>
+  <div id="speedo" hidden><span id="spd">0</span><small>km/h</small><span id="gear">N</span></div>
+  <div id="loc"><div id="loc-street"></div><div id="loc-area"></div></div>
+  <div id="prompt" hidden></div>
+  <div id="toast" hidden></div>
+  <div id="crosshair"></div>
+</div>
+
+<div id="touch">
+  <div class="tb" id="t-car" style="right:20px;bottom:130px">F</div>
+  <div class="tb" id="t-brake" style="right:90px;bottom:60px">⎍</div>
+  <div class="tb" id="t-run" style="right:20px;bottom:60px">⇧</div>
+  <div class="tb" id="t-map" style="right:20px;top:70px">M</div>
+</div>
+
+<div id="mapview" hidden>
+  <canvas id="bigmap"></canvas>
+  <div class="mapbar">
+    <h2>Skalica</h2>
+    <button class="btn" id="map-zout" aria-label="Oddialiť">−</button>
+    <button class="btn" id="map-zin" aria-label="Priblížiť">+</button>
+    <button class="btn" id="map-tp">Teleport na cieľ</button>
+    <button class="btn" id="map-close">Zavrieť <kbd>M</kbd></button>
+    <p>Klik = nastaviť cieľ · dvojklik = teleport · ťahaj pre posun, koliesko pre zoom</p>
+  </div>
+</div>
+
+<div id="menu" hidden>
+  <div class="card">
+    <h2>Pauza</h2>
+    <div class="row"><span>Kvalita grafiky</span><div class="seg" id="q-seg"><button class="btn" data-q="low">Nízka</button><button class="btn" data-q="medium">Stredná</button><button class="btn" data-q="high">Vysoká</button></div></div>
+    <div class="row"><span>Presunúť sa</span><div class="seg" id="m-places"><button class="btn" data-at="square">Námestie slobody</button></div></div>
+    <div class="row"><span>Čas</span><div class="seg"><button class="btn" id="m-skip">Posunúť čas</button><button class="btn" id="m-stop">Zastaviť čas</button></div></div>
+    <div class="row"><span>Zvuk</span><div class="seg"><button class="btn" id="m-sound">Zvuk zapnutý</button><button class="btn" id="m-radio">Rádio</button></div></div>
+    <button class="btn on" id="m-resume">Pokračovať</button>
+    <div class="credits">Mapové dáta © prispievatelia <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, ODbL. Textúry a HDRI oblohy: <a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a>, CC0. Renderer three.js, ambient occlusion N8AO. Budovy, autá a ľudia sú generované kódom; názvy áut sú vymyslené.</div>
+  </div>
+</div>

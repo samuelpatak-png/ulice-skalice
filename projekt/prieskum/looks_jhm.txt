@@ -1,0 +1,87 @@
+  60998087: { wall: '#e6bea2', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#8e4a36' },  // Mýtna 15, salmon, brown gate
+  60997144: { wall: '#eeede8', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#7a2e28' },  // Mýtna 11 white, skylights, brick front
+  60998433: { wall: '#d9be8c', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#66615b', roofMat: 'grey' },  // Mýtna ochre, grey roof
+  1113376389: { wall: '#e8dcc4', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#4a3a33' },  // Mýtna 9 cream, dormer
+  60999998: { wall: '#e3b574', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#9c4a36' },  // Mýtna/Horská corner ochre, arched gable windows, stone base
+  60997815: { wall: '#ebe9e3', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#b34a30' },  // fire station U Hasičov long white
+  60999230: { wall: '#5b3a2e', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#2c2d30', roofMat: 'grey' },  // pub Budvar, dark roof, red banners
+  60998195: { wall: '#e2896f', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#7a3a2e' },  // Horská 6? coral, balconies
+  60999267: { wall: '#c3c4c2', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#b04a32' },  // grey house red roof
+  60997520: { wall: '#e2c79c', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#4a3f3a' },  // sand + brick pilasters, dormers
+  60999142: { wall: '#d97a6c', floors: 1, fh: 3.0, roof: 'flat', roofColor: '#6a6560', roofMat: 'grey' },  // modern pink flat-roof behind block fence
+  61002147: { wall: '#e6cf5c', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#3c3d40', roofMat: 'grey' },  // yellow with dark grey panels, dormers
+  61003149: { wall: '#dcc5a6', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#6a3a2e' },  // beige with brick bands
+  60998546: { wall: '#e9b9a3', floors: 1, fh: 3.0, roof: 'hip', pitch: 32, roofColor: '#6e4c40' },  // pink single storey
+  60998788: { wall: '#e88a6c', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#564842' },  // salmon 2-storey
+  61001653: { wall: '#ecebe6', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#3a3a3c', roofMat: 'grey' },  // pub U Viktora (tent terrace, green sign)
+  61000143: { wall: '#e0a89c', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#9a5642' },  // old pink barn, big brown gate
+  61003912: { wall: '#e0a89c', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#9a5642' },  // pink barn continued
+  60997811: { wall: '#e28b62', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#5a3f36' },  // orange house, skylights, stone fence
+  60999775: { wall: '#dcdad4', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#9a9c9e', roofMat: 'grey' },  // long workshop, grey metal roof
+  61001313: { wall: '#e8d6b8', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#a8452f' },  // cream single storey
+  60997440: { wall: '#e3a79d', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#8a5a48' },  // pink barns + wall with brown steel gate
+  60997661: { wall: '#d4ada5', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#a3553f' },  // pink/grey plaster barn, gable to street
+  61004148: { wall: '#c9b99a', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#b02a24' },  // loam-plaster barn, new red metal roof, corrugated gate
+  61004252: { wall: '#eee9df', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#d0692c' },  // white, orange roof, sign
+  60997386: { wall: '#e3c898', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#b5553d' },  // sand single storey, timber porch
+  60997888: { wall: '#cfc1a2', floors: 2, fh: 2.9, roof: 'hip', pitch: 28, roofColor: '#6b5a4e' },  // 2-storey beige, low roof
+  106082839: { wall: '#aeb2b6', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#3e4044', roofMat: 'grey' },  // grey modern, grey steel gate, stone-look block fence
+  106082828: { wall: '#cbc2b2', floors: 2, fh: 2.9, roof: 'hip', pitch: 28, roofColor: '#6a5e56' },  // 2-storey beige old
+  106082580: { wall: '#a3a7ab', floors: 2, fh: 2.9, roof: 'flat', roofColor: '#5e6064', roofMat: 'grey' },  // grey modern cube
+  872005479: { wall: '#cfd0cf', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#333538', roofMat: 'grey' },  // grey modern, solar panels
+  106082690: { wall: '#a9c48c', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#d9683a' },  // green, orange roof
+  106082486: { wall: '#dcbab7', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#7a4a3e' },  // pink 2-storey, balcony
+  106082785: { wall: '#bdbec0', floors: 1, fh: 3.0, roof: 'flat', roofColor: '#6a6c70', roofMat: 'grey' },  // grey garage-house, grey sectional door
+  106082860: { wall: '#d0a877', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#6e3e32' },  // tan 2-storey, balcony
+  106082738: { wall: '#cac8c3', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#6a6a6a', roofMat: 'grey' },  // grey-white 2-storey
+  106082533: { wall: '#c49c6e', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#5e5a58', roofMat: 'grey' },  // tan 2-storey, metal roof
+  106082598: { wall: '#e8e6e0', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#c0492f' },  // white, behind timber fence
+  106082959: { wall: '#c8bdb0', floors: 1, fh: 3.0, roof: 'flat', roofColor: '#6a6560', roofMat: 'grey' },  // garage, light blue doors
+  106083006: { wall: '#efeee9', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#b85a3e' },  // white, gable to street, old white wall
+  1308389668: { wall: '#ebebea', floors: 1, fh: 3.0, roof: 'flat', roofColor: '#5e6064', roofMat: 'grey' },  // garage row white
+  1308389670: { wall: '#ebebea', floors: 1, fh: 3.0, roof: 'flat', roofColor: '#5e6064', roofMat: 'grey' },  // garage row white
+  1308389669: { wall: '#ebebea', floors: 1, fh: 3.0, roof: 'flat', roofColor: '#5e6064', roofMat: 'grey' },  // garage row white
+  1308389666: { wall: '#ebebea', floors: 1, fh: 3.0, roof: 'flat', roofColor: '#5e6064', roofMat: 'grey' },  // garage row white
+  1308389667: { wall: '#ebebea', floors: 1, fh: 3.0, roof: 'flat', roofColor: '#5e6064', roofMat: 'grey' },  // garage row white
+  106082625: { wall: '#c98270', floors: 1, fh: 3.0, roof: 'hip', pitch: 32, roofColor: '#6b4a40' },  // salmon single storey
+  106082684: { wall: '#cfc4b0', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#5e5652' },  // beige 2-storey
+  106082994: { wall: '#e8e0c8', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#6b4a40' },  // cream single storey
+  106082995: { wall: '#dcdedd', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#d7663b' },  // terrace
+  106082549: { wall: '#e9e8e2', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#d7663b' },  // terrace
+  106082634: { wall: '#dcdedd', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#d7663b' },  // terrace
+  106082911: { wall: '#e9e8e2', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#d7663b' },  // terrace
+  1157011755: { wall: '#dcdedd', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#d7663b' },  // terrace
+  106082812: { wall: '#e9e8e2', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#d7663b' },  // terrace
+  106082556: { wall: '#e3d2bc', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#d7663b' },  // terrace
+  106082540: { wall: '#e9e8e2', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#d7663b' },  // terrace
+  106082916: { wall: '#d6ccb8', floors: 2, fh: 2.9, roof: 'hip', pitch: 28, roofColor: '#7a7470', roofMat: 'grey' },  // beige cube
+  106082736: { wall: '#bdb9b2', floors: 2, fh: 2.9, roof: 'hip', pitch: 28, roofColor: '#6a6664', roofMat: 'grey' },  // grey cube
+  106082638: { wall: '#cbb8a0', floors: 2, fh: 2.9, roof: 'hip', pitch: 28, roofColor: '#6e6a66', roofMat: 'grey' },  // beige cube, balconies
+  106082457: { wall: '#e6a262', floors: 2, fh: 2.9, roof: 'hip', pitch: 28, roofColor: '#8a8c8e', roofMat: 'grey' },  // apricot cube, grey metal hip roof
+  106082809: { wall: '#cfc3ad', floors: 2, fh: 2.9, roof: 'hip', pitch: 28, roofColor: '#7a7470', roofMat: 'grey' },  // beige cube
+  106082629: { wall: '#b8b6ae', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#8e4a38' },  // old grey rough-plaster hall, eave 5.5, two chimneys
+  106082476: { wall: '#d2c3a8', floors: 1, fh: 3.0, roof: 'hip', pitch: 32, roofColor: '#6e4a3e' },  // beige bungalow, block fence red gate
+  608455875: { wall: '#e6dfd0', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#b8452f' },  // cream 2-storey, brick ground floor
+  106082454: { wall: '#d8cbb4', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#7a5044' },  // beige
+  61002822: { wall: '#e38b74', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#5e4238' },  // salmon, dormers
+  61000102: { wall: '#bcc4cc', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#9c4a36' },  // grey-blue café, timber fence, yellow umbrellas
+  60999250: { wall: '#eba796', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#b8503a' },  // pink
+  60997058: { wall: '#dcdfd4', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#3d3e40' },  // civic, dark roof with big dormers
+  60997289: { wall: '#c05848', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#b04a36' },  // terracotta, gable to street, skylights
+  60998242: { wall: '#cfc6b6', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#6e5a4e' },  // beige, garage, mural fence
+  61000081: { wall: '#e6e2d6', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#b8503a' },  // cream single storey
+  61001978: { wall: '#ece8df', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#c85a3c' },  // white single storey, brown gate
+  60999710: { wall: '#e8e8e4', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#3a3c40', roofMat: 'grey' },  // modern white + dark stone cladding, dormers
+  60998142: { wall: '#e4d4bc', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#7a5a4c' },  // beige
+  61000473: { wall: '#eeece6', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#b04a34' },  // white + brick-slip section, skylights, brown garage door
+  60997527: { wall: '#e6e4de', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#a84a36' },  // white single storey, brown garage door
+  61000366: { wall: '#d9cfc2', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#a85038' },  // old peeling plaster, red double door
+  61000658: { wall: '#e6e2da', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#7a4e40' },  // white outbuilding
+  60998967: { wall: '#efefec', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#6a5a50' },  // Brčkov pub, white, eave 4
+  60998585: { wall: '#c4704e', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#3c3d40', roofMat: 'grey' },  // new brick house under construction, dark roof
+  61004181: { wall: '#e0a8a6', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#4e4442' },  // pink 2-storey, brick base
+  60997248: { wall: '#e08a48', floors: 1, fh: 3.0, roof: 'hip', pitch: 32, roofColor: '#6a4638' },  // orange, brick-slip fence
+  61001219: { wall: '#dccab0', floors: 1, fh: 3.1, roof: 'gable', pitch: 42, roofColor: '#4a3c36' },  // beige, dormers
+  60997047: { wall: '#e8e6e0', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#b0503a' },  // white behind grey block fence
+  60999108: { wall: '#e4d8c0', floors: 2, fh: 2.9, roof: 'gable', pitch: 36, roofColor: '#b0503a' },  // beige 2-storey behind gate
+  60997014: { wall: '#eeeae0', floors: 1, fh: 3.0, roof: 'gable', pitch: 36, roofColor: '#a84a36' },  // (not seen)

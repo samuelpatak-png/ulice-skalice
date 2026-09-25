@@ -1,0 +1,20 @@
+{
+  "name": "ulice-skalice",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Skalica (SK) as a realistic open-world driving & walking game in the browser, built from OpenStreetMap data.",
+  "type": "module",
+  "scripts": {
+    "prep": "python3 tools/prep.py",
+    "assets": "python3 tools/fetch_assets.py",
+    "build": "node tools/build.mjs",
+    "serve": "python3 -m http.server 8080 -d dist"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "n8ao": "2.0.1",
+    "postprocessing": "^6.39.5",
+    "three": "0.180.0"
+  },
+  "license": "MIT"
+}
