@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { S } from '../core/state.js';
 import { pts, hash, rng, area, centroid, pip, segDist, clipHalf, offset, col, mulc, mixc, Geo, Grid2D } from '../core/util.js';
 import { L, FT, FLAG, WORLD, tintFor, makeWaterMaterial } from '../render/materials.js';
+import { roadSurface } from './prvky/surfaces.js';
 
 export const CITY = {
   tileSize: 400, tiles: new Map(),
@@ -434,7 +435,12 @@ CITY.buildRoads = function () {
       const G = CITY.tile(mx, mz).f;
       const m0 = (J[i] === 2 || J[i + 1] === 2) ? 0.01 : hw, m1 = m0;
       const a = Lft[i], b = Lft[i + 1], c = Rgt[i + 1], d = Rgt[i];
-      G.quad([a[0], gy(a[0], a[1]) + y0, a[1]], [b[0], gy(b[0], b[1]) + y0, b[1]], [c[0], gy(c[0], c[1]) + y0, c[1]], [d[0], gy(d[0], d[1]) + y0, d[1]], tint, mat, ft + flag,
+      // roads[].surface from a district: the carriageway material of this box (overrides the OSM cobble tint,
+      // and setts / stone / pavers carry no painted centre line)
+      const so = r.swAt && r.swAt(mx, mz), sp = so && so.surface ? roadSurface(so.surface) : null;
+      const sAsph = sp && so.surface === 'asphalt';               // asphalt keeps the markings of the road class
+      G.quad([a[0], gy(a[0], a[1]) + y0, a[1]], [b[0], gy(b[0], b[1]) + y0, b[1]], [c[0], gy(c[0], c[1]) + y0, c[1]], [d[0], gy(d[0], d[1]) + y0, d[1]],
+        sp ? sp.tint : tint, sp ? sp.mat : mat, sp && !sAsph ? sp.ft : ft + flag,
         [U[i], hw, m0, 0], [U[i + 1], hw, m1, 0], [U[i + 1], -hw, m1, 0], [U[i], -hw, m0, 0], UP);
     }
     // round ends and sharp bends of non-vehicle ways
@@ -444,15 +450,21 @@ CITY.buildRoads = function () {
       for (const side of [1, -1]) {
         const si = side === 1 ? 0 : 1;
         const segO = (i) => { if (!r.swAt) return null; return r.swAt((P[i][0] + P[i + 1][0]) / 2, (P[i][1] + P[i + 1][1]) / 2); };
-        let so = 0, swi = r.sw; const flat = [], asph = [], grav = [];
-        // o.mat applies to both sides, o.mats = [side +1, side -1]; 'gravel' is a flat verge without kerb
-        const pick = (i) => { const o = segO(i), mt = o ? (o.mats ? o.mats[si] : o.mat) : null; so = o ? o.off[si] : 0; swi = o ? o.sw[si] : (r.swDef ?? r.sw); grav[i] = mt === 'gravel'; flat[i] = !!(o && (o.flat || grav[i])); asph[i] = mt === 'asphalt'; };
+        let so = 0, swi = r.sw; const flat = [], asph = [], grav = [], kerb = [];
+        // o.mat applies to both sides, o.mats = [side +1, side -1]; 'gravel' is a flat verge without kerb.
+        // o.curbH / o.curb ('road' | 'low' | 'none') set the kerb height of this stretch (prvky).
+        const pick = (i) => {
+          const o = segO(i), mt = o ? (o.mats ? o.mats[si] : o.mat) : null;
+          so = o ? o.off[si] : 0; swi = o ? o.sw[si] : (r.swDef ?? r.sw); grav[i] = mt === 'gravel';
+          flat[i] = !!(o && (o.flat || grav[i] || o.curb === 'none')); asph[i] = mt === 'asphalt';
+          kerb[i] = o ? (o.curb === 'low' ? Math.min(o.curbH ?? 0.08, 0.08) : o.curbH ?? WALK_Y) : WALK_Y;
+        };
         const I0 = [], I1 = [], O1 = [];
         for (let i = 0; i < P.length - 1; i++) { pick(i); for (const [arr, d] of [[I0, hw + so], [I1, hw + so + 0.16], [O1, hw + so + swi]]) { const seg = offsetOpen([P[i], P[i + 1]], side * d); arr[i] = arr[i] || seg[0]; arr[i + 1] = seg[1]; arr.sw = arr.sw || []; arr.sw[i] = swi; } }
         const yS = (i) => J[i] === 2 ? null : J[i] === 1 ? (U[i] === undefined ? WALK_Y : null) : WALK_Y;
         for (let i = 0; i < P.length - 1; i++) {
           if (J[i] === 2 || J[i + 1] === 2 || !O1.sw[i]) continue;
-          const WY = flat[i] ? 0.04 : WALK_Y;
+          const WY = flat[i] ? 0.04 : (kerb[i] ?? WALK_Y);
           const ha = J[i] === 1 && J[i + 1] !== 1 ? ROAD_Y + 0.004 : WY, hb = J[i + 1] === 1 && J[i] !== 1 ? ROAD_Y + 0.004 : WY;
           const hA = (J[i] === 1 && J[i + 1] === 1) ? ROAD_Y + 0.004 : ha, hB = (J[i] === 1 && J[i + 1] === 1) ? ROAD_Y + 0.004 : hb;
           const G = CITY.tile((P[i][0] + P[i + 1][0]) / 2, (P[i][1] + P[i + 1][1]) / 2).f, Gb = CITY.tile(P[i][0], P[i][1]).b;
@@ -479,6 +491,8 @@ CITY.buildRoads = function () {
     let main = null; for (const a of n.arms) if (!main || a.r.w > main.r.w) main = a;
     const rs = RSPEC[main.r.k]; let mat = rs.mat, tint = tt(mat, rs.hex), ft = rs.ft === FT.ROAD_MAIN ? FT.ROAD : rs.ft;
     if (main.r.cob) { mat = L.COBBLE; tint = tt(mat, '#7f786e'); ft = FT.ROAD_SETTS; }
+    const jo = main.r.swAt && main.r.swAt(n.x, n.z), jsp = jo && jo.surface ? roadSurface(jo.surface) : null;
+    if (jsp) { mat = jsp.mat; tint = jsp.tint; ft = jsp.ft; }     // the junction disc follows roads[].surface too
     CITY.disc(G, [n.x, n.z], n.hw * 1.02, gy + ROAD_Y - 0.001, tint, mat, ft, 16, [0, 0, 0, 0]);
     if (n.hws > n.hw + 0.5) {
       const hull = [];

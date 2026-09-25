@@ -66,6 +66,7 @@ async function main() {
   buildSigns(scene);
   prog(0.88, 'Stromy a zeleň…');
   const trees = []; for (let i = 0; i < D.t.length; i += 3) trees.push({ x: D.t[i] / 10, z: D.t[i + 1] / 10, k: D.t[i + 2] });
+  for (const t of D.tExtra || []) trees.push(t);        // surveyed trees with an exact scale / height / rotation
   let VEG = null;
   try { VEG = await buildVegetation(scene, trees, { groundH: CITY.groundH, renderer }); for (const o of VEG.obstacles) CITY.addObst(o.x, o.z, o.r, 't'); }
   catch (e) { console.warn('vegetation failed', e, e && e.stack); }

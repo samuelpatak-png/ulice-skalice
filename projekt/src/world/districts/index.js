@@ -6,12 +6,14 @@ import { CITY } from '../city.js';
 import { buildRetail, buildPylons, buildBillboards } from './retail.js';
 import { applyLots, buildLots } from './lots.js';
 import { buildMichalTower, buildKarner, buildPlagueColumn, buildFurniture } from './landmarks.js';
+import { applyPrvky, buildPrvky, treeExtra, pushTree, fenceBase, slatFence, fenceGaps, allDriveways } from '../prvky/index.js';
+import TEST, { testEnabled } from '../prvky/test_district.js';
 import PZ from './pelisk_zahradna.js';
 import ML from './malleho_lucky.js';
 import NS from './namestie.js';
 import JHM from './jednoradova_horska_mytna.js';
 
-export const DISTRICTS = [PZ, ML, NS, JHM];
+export const DISTRICTS = [PZ, ML, NS, JHM, ...(testEnabled() ? [TEST] : [])];
 const EXACT = 0.0625;                       // ft flag: colours come from geometry, no random facade accents
 const tt = (layer, hex, k = 1) => tintFor(layer, mulc(col(hex), k));
 
@@ -74,7 +76,8 @@ export function applyDistricts(D) {
     // trees: drop procedural ones, add surveyed ones
     const t = [];
     for (let i = 0; i < D.t.length; i += 3) if (!inside(D.t[i] / 10, D.t[i + 1] / 10)) t.push(D.t[i], D.t[i + 1], D.t[i + 2]);
-    for (const tr of Z.trees || []) t.push(Math.round(tr[0] * 10), Math.round(tr[1] * 10), tr[2]);
+    // [x, z, k] goes into the packed list; entries with a size / rotation / height keep their exact values (prvky)
+    for (const tr of Z.trees || []) { const ex = treeExtra(tr); if (ex) pushTree(D, ex); else t.push(Math.round(tr[0] * 10), Math.round(tr[1] * 10), tr[2]); }
     for (const row of Z.treeRows || []) for (const p of roadLines(D, row.road, row.box)) {
       let j = 0; for (const q of resample(offsetLine(p, row.off), row.every, row.jitter, R)) t.push(Math.round(q[0] * 10), Math.round(q[1] * 10), row.kinds[j++ % row.kinds.length]);
     }
@@ -112,6 +115,7 @@ export function applyDistricts(D) {
     }
     D.cars = c;
     applyLots(D, Z, over, R);
+    applyPrvky(D, Z, over);        // new generic elements (signs, lamps, poles, crossings, ...) - see world/prvky
     // OSM area mis-tags: the area containing p gets another kind (e.g. a traffic playground tagged as a running track -> grass)
     for (const ak of Z.areaKinds || []) {
       const ki = D.ak.indexOf(ak.kind); if (ki < 0) continue;
@@ -224,7 +228,8 @@ function fenceRuns(f) {
 function drawFence(f, a, b) {
   const dx = b[0] - a[0], dz = b[1] - a[1], Ln = Math.hypot(dx, dz); if (Ln < 0.2) return;
   const G = CITY.tile(a[0], a[1]).b, ang = Math.atan2(dz, dx), m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], h = f.h || 1.6;
-  const y0 = CITY.groundH(m[0], m[1]);
+  const y0 = CITY.groundH(m[0], m[1]) + fenceBase(f, a, b);      // f.y0 / f.base: plinth under the fence (prvky)
+  if (f.type === 'slat') { slatFence(f, a, b, y0, h); CITY.addEdge(a[0], a[1], b[0], b[1], h, 'wall'); return; }
   const at = (t) => [a[0] + dx * t, a[1] + dz * t];
   const body = (th, c, mat, ft = 0, y = -0.1, hh = h + 0.1) => CITY.box(G, m[0], y0 + y, m[1], Ln, hh, th, ang, c, mat, ft);
   const posts = (step, w, hh, c, mat, ends = false) => {
@@ -261,9 +266,9 @@ function drawFence(f, a, b) {
       CITY.box(G, m[0], y0 + h - 0.05, m[1], Ln, 0.05, 0.07, ang, fr, L.CORRUGATED, 0);
       break;
     }
-    case 'wood': case 'slat': {
+    case 'wood': {
       const c = tt(L.PLASTER_ROUGH, f.color || '#6a4632', 0.9);
-      body(0.04, c, L.PLASTER_ROUGH, f.type === 'wood' ? FT.PLANKS : FT.FENCE, 0.03, h - 0.03);
+      body(0.04, c, L.PLASTER_ROUGH, FT.PLANKS, 0.03, h - 0.03);
       posts(2.4, 0.1, h - 0.05, mulc(c, 0.8), L.PLASTER_ROUGH);
       break;
     }
@@ -566,7 +571,8 @@ export function buildDistrictProps() {
       }
     }
   }
-  for (const f of CITY.over.fences) for (const [a, b] of fenceRuns(f)) drawFence(f, a, b);
+  const drives = allDriveways();                                 // a driveway cuts a gap into the fence it crosses
+  for (const f of CITY.over.fences) for (const [a, b] of fenceGaps(fenceRuns(f), drives)) drawFence(f, a, b);
   const wallC = tt(L.PRECAST, '#b8b3a8', 0.9), binC = ['#1f5aa6', '#e2c019', '#2f7d3a', '#2a2b2d'];
   for (const [x, z, a, style] of CITY.over.bins) {
     const G = CITY.tile(x, z).b, cs = Math.cos(a), sn = Math.sin(a);
@@ -603,6 +609,7 @@ export function buildDistrictProps() {
   }
   buildLots(); buildRetail(CITY.over.retail); buildPylons(CITY.over.pylons); buildBillboards(CITY.over.billboards);
   buildFurniture(CITY.over.furniture);
+  buildPrvky();                                                  // signs, lights, poles + wires, crossings, markings, driveways, new furniture
   const LM = CITY.over.landmarks;
   if (LM.michalTower) buildMichalTower(LM.michalTower);
   if (LM.plagueColumn) buildPlagueColumn(LM.plagueColumn);
