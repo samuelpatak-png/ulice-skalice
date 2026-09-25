@@ -1,4 +1,8 @@
-# Centrum 1 / Gorkého (1. úsek) — čo z prieskumu je v hre a čo nie
+# Centrum 1 — čo z prieskumu je v hre a čo nie
+
+Súbor má dve časti: **A. Gorkého (1. úsek)** a **B. Štefánikova (1. úsek)**. Kráľovská pribudne neskôr.
+
+# A. Gorkého (1. úsek)
 
 Zdroj: prieskumný balík `centrum1_gorkeho` (`looks.txt` sekcia ## Gorkého, `ploty.txt`, `zariadenie.txt`, `trasa.md`), Street View 10/2022 a satelit `sat_Gorkeho_1.png`.
 Cieľový súbor: `projekt/src/world/districts/centrum1.js`. Úsek: OSM way 38417436, (250.0,−163.5) → (308.0,−132.8), s = 0…58.
@@ -210,3 +214,213 @@ kalibrované polohy kamier, čas v hre 13:12 (`?t=0.55`). Skript: `prieskum/cent
 - `dir` značky B34 (mimo úseku) je neisté — `trafficSigns[4].note`.
 - Okrúhla mriežka pri s 19.9 a vpusť pri s 15.9 sú neisté — `furniture` `note`.
 - Stĺpik bez značky pred súdom (s 6.1) — `todo`.
+
+---
+
+# B. Štefánikova (1. úsek)
+
+Zdroj: prieskumný balík `centrum1_stefanikova` (sekcie `## Štefánikova` v `looks.txt`, `ploty.txt`, `zariadenie.txt`, `trasa.md`,
+`poznamky_timu.md`), Street View 10/2022 zo stanovísk Š0–Š9 (40 snímok) a satelit `sat_Stefanikova_1.png`.
+Úsek: OSM way 1299698076, (120.6,−182.1) → (−1.8,−123.9), dĺžka 135.7 m. Os je lomená, lomy pri s 6.9, 40.2 a 75.9.
+`s` = vzdialenosť pozdĺž osi od námestia, `t` = kolmo (+ sever = park a dláždená plocha, − juh = radnica a rad domov).
+Sekciu „## Námestie – oprava“ z balíka tento PR nespracúva (patrí do vetvy `stvrt/namestie-oprava`).
+
+## Prepočet smerov na konvenciu kódu
+
+Prieskum udáva `dir` v stupňoch od severu (0 = sever, rastie v smere hodinových ručičiek). Kód pracuje s matematickým
+uhlom v rovine x–z (0 = +x = východ, rastie k +z = juh). Platí:
+
+**uhol_kódu = dir − 90**
+
+| Kľúč | Čo uhol znamená | Vzorec | Štefánikova |
+|---|---|---|---|
+| `looks[].ang` | smer hrebeňa strechy | `dir − 90` | hrebeň 243° → `ang 153` (Gorkého 117° → 27) |
+| `lots.lamps[].a` | os ramien kandelábra | `dir − 90` | ramená kolmo na ulicu, dir 153 → `a 63` |
+| `furniture` `t: 'bench'` `ang` | os **sedadla**, nie smer pohľadu; sediaci hľadí o 90° vedľa | `dir − 180` | sediaci k ulici dir 153 → `ang 333` |
+| `furniture` `t: 'adColumn'` `rot` | natočenie plagátov, jednotka je **otáčka**, nie stupeň | `(dir − 90) / 360` | dir 153 → `rot 0.175` |
+
+Overené renderom: pri `ang 333` je operadlo lavičky na severnej strane a sediaci hľadí na JJV k ulici
+(kontrolný pohľad z (15.77,−141.44) smerom 333° ukazuje lavičku spredu, operadlo za ňou).
+
+## Š1. Domy (`looks`, `extraBuildings`)
+
+| # | Položka | v hre | Kde v dátach / poznámka |
+|---|---|---|---|
+| Š1.1 | 60997383 Štefánikova 136/1, biely historický dom so štukovou výzdobou, `wall #e2dfd6`, 2 podl., `fh 3.7`, `eave 7.9`, sedlová, `rh 4.5`, `roofColor #a97873` | áno | `looks[60997383]`, `ang 153`, `ft 2`, `mat PLASTER`. Rovnaké hodnoty ako 60999413 — obidva obrysy tvoria vizuálne jeden dom (spoločná rímsa aj strecha), preto ani na hranici s 80 nie je vidieť švík. |
+| Š1.2 | 60999413 východná časť toho istého domu s prejazdom | áno | `looks[60999413]`, hodnoty zhodné s Š1.1. |
+| Š1.3 | 1174039013 Štefánikova 2600/3A, žltá prízemná reštaurácia TÁČKAREŇ, `wall #efc585`, `fh 3.4`, `eave 4.7`, sedlová, `rh 4.0`, `roofColor #b48f88` | áno | `looks[1174039013]`, `ang 153`, `ft 2`. |
+| Š1.4 | 61002459 Štefánikova 135/3, PIZZA APETITO, to isté farebné riešenie | áno | `looks[61002459]`, hodnoty zhodné s Š1.3. **`ft: 2` je doplnené zámerne:** v OSM má obchodnú značku (`fac 4`) a bez `ft` by dostala presklené prízemie, kým TÁČKAREŇ nie, takže by bol na hranici obrysov vidieť švík (bod 4 zadania). Výklady Apetita nahrádza tabuľa (Š2.4). |
+| Š1.5 | 61001176 Štefánikova 2163/5 (Raiffeisen BANK), `wall #eccdb5`, 2 podl., `fh 3.6`, `eave 7.9`, sedlová, `rh 4.5`, `roofColor #966f66` | áno | `looks[61001176]`, `ang 153`, `ft 2`. |
+| Š1.6 | 61000307 Štefánikova 134/7, to isté farebné riešenie | áno | `looks[61000307]`, hodnoty zhodné s Š1.5. |
+| Š1.7 | Časť bloku nad prejazdom (s 110 → 112.9), vyšší rizalit s balkónmi, `eave ≥ 10.5` | áno (náhradou) | **CHÝBA V OSM.** `extraBuildings[0]`, id `9000002`, `like: 61001176`, polygón `[[25.2,−127.3],[22.8,−125.9],[25.9,−120.6],[28.4,−121.9]]`, `look` s `eave 10.6`, `floors 3`, `rh 3.2`. Prejazd pod ním (2.6 × 3.4 m) v hre **nie je priechodný** — engine vie diery iba ako dvory (`holes` v obryse), nie otvor v prízemí; zapísané v `todo` („dom nad prejazdom chýba v OSM“). |
+| Š1.8 | 60999339 Štefánikova 133/7A, MÄSIARSTVO U BÝKA, koralová prízemná predajňa, `wall #da7f6d`, `eave 3.8`, valbová, `rh 5.0`, `roofColor #b87260` | áno | `looks[60999339]`, `ang 153`, `ft 2` (OSM `fac 4` by dal celopresklené prízemie, v skutočnosti je tam múr s jedným výkladom a dverami). |
+| Š1.9 | 60999883 Štefánikova 138/10, dlhý biely obchodný dom (Orange, La Donuteria), `wall #f2eee2`, `eave 3.6`, valbová, `rh 3.0`, `roofColor #b5623f` | áno | `looks[60999883]`, `ang 153`, **`ft 4`** — má 7–8 prevádzok s presklenými výkladmi, ale OSM `cat 5` by ich sám nedal. |
+| Š1.10 | 1488770549 Štefánikova 138/8, biely dom so štítom za múrom | áno (čiastočne) | `looks[1488770549]`, bez `ang` — smer hrebeňa je zo snímok neistý (do ulice vidno iba múr, viď Š3.1). |
+| Š1.11 | 60998021 Potočná 195/31, nárožný dom na konci úseku | áno | `looks[60998021]`, `ft 2`, bez `ang` (valbová strecha, smer hrebeňa sa z 25 m cez stromy neurčil). Podľa rozhodnutia vedúceho patrí k Štefánikovej, nie k Potočnej. |
+| Š1.12 | 60997157 Štefánikova 2597/2, pavilón/kaviareň v parku | áno | `looks[60997157]`, `ft 2`, bez `ang`. Presnosť nízka (35–40 m od kamery). |
+| Š1.13 | 61001746 radnica — južná fasáda do Štefánikovej nie je jednofarebná (4 úseky) | nie | Radnica má `looks` v `namestie.js` a podľa rozhodnutia vedúceho ju tento PR **nemení**; ide do vetvy `stvrt/namestie-oprava`. Popis všetkých štyroch úsekov je v `todo` — „ŠT: radnica 61001746 – južná fasáda nie je jednofarebná“. |
+| Š1.14 | 60999034 ZUŠ / Ľudová škola umenia | — | Adresa Jatočná, hľadí do parku → patrí ulici Jatočná. `looks` sa nezapisuje, popis je v `todo`. |
+| Š1.15 | Domy „CHÝBA V OSM?“ okrem Š1.7 | — | Žiadne ďalšie. Každý ostatný dom viditeľný v úseku má obrys v OSM (overené v `data/game.json`). |
+
+## Š2. Doplnky na fasádach (`retail`)
+
+Pri všetkých platí: `v` sa meria od terénu, chodník je o 0.15 m vyššie, takže sokel 0.6 m nad chodníkom = `v [0, 0.75]`.
+Južné fasády hľadia na SSZ (333°), pri `path` v smere rastúceho `s` je to `side: 1`; severné hľadia na JJV (153°) → `side: -1`.
+
+| # | Položka | v hre | Kde v dátach / poznámka |
+|---|---|---|---|
+| Š2.1 | Svetlosivý sokel 60997383 + 60999413, ~0.6 m (`#c3bdb9`) | áno | `retail`, `path [[61.1,−144.5],[46.4,−138.1]]`, `wall [0,16.03] × [0,0.75]`. |
+| Š2.2 | Okrový sokel 1174039013 + 61002459, ~0.4 m (`#dfa159`) | áno | `retail`, `path [[46.4,−138.1],[32.2,−131.1]]`, `wall [0,15.83] × [0,0.55]`. |
+| Š2.3 | Tabuľa „TÁČKAREŇ“ nad vchodom (s 88–90.5, h ≈ 3.3) | áno | `retail`, `sign` s presetom `board`. Logo (kruh s príborom) hra nevie, je nahradené textom. |
+| Š2.4 | Nápis „PIZZA APETITO“ (s 97–100.5, h ≈ 3.8) | áno | `retail`, `sign` `board`. Dvojfarebný nápis (zelené PIZZA + červené APETITO) a logo kuchára hra nevie; pruhovaná markíza pod ním chýba — `todo`. |
+| Š2.5 | Sivý sokel 61001176 + rizalit + 61000307, ~0.5 m (`#a99891`) | áno | `retail`, `path [[32.2,−131.1],[9.3,−118.9]]`, `wall [0,25.95] × [0,0.65]` — jedno líce cez všetky tri časti, aby nebol vidieť švík. |
+| Š2.6 | Tabuľa „Raiffeisen BANK“ (s 103.6–106.3, h ≈ 3.4) | áno | `retail`, `sign` `board` (čierna so žltým textom). |
+| Š2.7 | Tabuľa „KANCELÁRSKE POTREBY“ s erbom (s 116–119.5) | áno | `retail`, `sign` `board` (zelená). Erb hra nevie. |
+| Š2.8 | Tabule „CENTRUM POISTENIA“ + „CENTRUM ÚVEROV“ (s 120–124.5) | áno | `retail`, jeden `sign` `board` s dvoma riadkami namiesto dvoch tabúľ. |
+| Š2.9 | Tmavočervený sokel 60999339, ~0.3 m (`#ab3d29`) | áno | `retail`, `path [[9.3,−118.9],[0.1,−112.8]]`, `wall [0,11.04] × [0,0.45]`. |
+| Š2.10 | Červený pás s nápisom „MÄSIARSTVO U BÝKA“ (s 131–134, h ≈ 3.0) | áno | `retail`, `sign` `board`. |
+| Š2.11 | Okrovohnedá podmurovka 60999883, ~0.5 m (`#c49a70`) | áno | `retail`, `path [[22.9,−157.5],[−2.5,−143.4]]`, `wall [0,29.05] × [0,0.65]`, `side: -1`. |
+| Š2.12 | Modrý svetelný výklad Orange (s ≈ 110.5) | áno | `retail`, `sign` `board` (oranžová). |
+| Š2.13 | Sivá skrinka (zvončeky/elektro) na fasáde pri prejazde, s 113.7 | nie | Chýbajúci typ: **Elektrické skrine, rozvádzače**. Dáta: `furniture`, `t: 'cabinet'`, `[22.0,−125.5]`. |
+| Š2.14 | Dvojfarebnosť 61001176/61000307 (prízemie lososové `#e3b698`) | nie | Hra kreslí jednu farbu fasády; natrieť prízemie cez `retail.wall` by prekrylo výklady aj vchody (rovnaký problém ako pri úrade práce na Gorkého). Dáta: `todo`. |
+| Š2.15 | Ostatné detaily fasád (rímsy, suprafenestry, vikiere, strešné okná, balkóny, markíza, menu tabule, zvody, komíny, makovice, mreže) | nie | Hra generuje raster okien sama a kreslí holú strešnú rovinu. Dáta: `todo` — „ŠT: detaily fasád južného radu“ a „ŠT: detaily fasád severnej strany“ (položka po položke s osami `s`). |
+
+## Š3. Ploty, múry a brány (`fences`)
+
+| # | Položka | v hre | Kde v dátach / poznámka |
+|---|---|---|---|
+| Š3.1 | Múr pred 1488770549, s 88–98, h 2.3, oranžovolososový `#d9a07c` s tmavou krycou doskou `#6e5a50`, 1 murovaný pilier pri s ≈ 90 | áno (čiastočne) | `fences`, `p: [[32.27,−162.31],[23.35,−157.56]]`, **`type: 'wall'`** (omietnutý múr s krycou doskou). Balík navrhuje `brick`, ten však kreslí tehlovú textúru a pevne sivú dosku — `wall` vie zadať farbu dosky. Samostatný pilier hra nevie. |
+| Š3.2 | Dvojkrídlová kovaná mreža v prejazde pod rizalitom, s 110–112.9, h 3.2, `#2a2a2a` | áno (náhradou) | `fences`, `p: [[25.17,−127.51],[22.58,−126.2]]`, `type: 'slat'` (zvislé laty). Chýbajúci typ: **Brány a bránky** (krídla, oblúkový vrch podľa oblúka prejazdu, priehľadnosť). Leží 0.3 m pred uličnou čiarou, aby bola pred čelom domu `9000002` vidieť. |
+| Š3.3 | Nízke drevené zábradlie terasy pri pavilóne v parku, s 27–34, t ≈ 32, h 1.0, `#8a6a4e` | áno | `fences`, `p: [[76.6,−198.8],[82.6,−202.7]]`, `type: 'wood'`. Poloha ±2 m (35–40 m od kamery). |
+| Š3.4 | Iné ploty | — | Južná strana je celá na uličnej čiare bez plotov; severná tiež (park je voľne prístupný, bez plôtika aj obrubníka). Živé ploty v úseku nie sú. |
+
+## Š4. Vozovka, chodníky, obrubníky, plochy (`roads`, `lots`)
+
+| # | Položka | v hre | Kde v dátach / poznámka |
+|---|---|---|---|
+| Š4.1 | Vozovka celá zo žulových kociek (sett), sivá `#a19991`, kladená v oblúkoch, bez vodorovného značenia | áno (čiastočne) | Hra ju kreslí kockami už z OSM (`surface=sett` → `cob 1`, odtieň `#7f786e`). Podľa rozhodnutia vedúceho je v dátach `roads[].surface: 'settsDark'` na všetkých troch záznamoch Štefánikovej aj na ústí Jatočnej; hra toto pole zatiaľ nečíta, nakreslí ho tech/prvky. Presný odtieň z prieskumu (`#a19991`) a oblúkové kladenie sa v schéme zadať nedajú. |
+| Š4.2 | Šírka medzi obrubníkmi 8.7–10.0 m (sever +2.0…+4.1, juh −5.1…−6.8) | áno (čiastočne) | OSM udáva `w 7.0` a os leží ~1.8 m severne od skutočnej osi vozovky. Obrubníky sú posunuté cez `off`: `[2.8, −0.7]` (s 0–40), `[3.1, −1.35]` (s 40–68), `[2.4, 0]` (s 83–136). Kladné `off` na juhu znamená, že obrubník je mimo OSM vozovky — pás medzi nimi dopĺňajú tri polygóny `lots.surfaces` s `m: 'settsDark'` a odtieňom `#7f786e` (zhodným s kockami z mapy), takže švík nie je vidieť. Namerané na renderi Š7‑153: obrubník t −5.9…−6.2, fasáda t −9.4 (prieskum −5.9…−6.2 a −9.3). |
+| Š4.3 | Obrubníky kamenné sivé, `curbH ≈ 0.12–0.15` (**neisté** ±0.03) | nie | Chýbajúci typ: **Obrubníky – výška, typ**. Hodnota `curbH: 0.13` je vo všetkých štyroch záznamoch `roads`; hra zatiaľ kreslí pevných 0.15 m. |
+| Š4.4 | Zníženia obrubníka pri oboch zebrách (`drops`) | nie | Chýbajúci typ: **Priechody pre chodcov**. Dáta: `crossings[].drops: true`. |
+| Š4.5 | Južný chodník, betónová dlažba, 3.1–4.4 m (s 5–35: 3.7 m, s 50–70: 3.1–3.4 m, s 100–136: 3.3 m) | áno | `roads[].sw[0]` = 3.7 / 3.3 / 3.4 podľa boxu. Chýbajúci typ: **Chodníky – materiály** (obdĺžnikové sivé dlaždice vs. veľké štvorcové od s 100 sa zadať nedajú, hra má jednu textúru). |
+| Š4.6 | Severný chodník pri parku, betónové dlaždice `#c2beb6`, 1.7–2.0 m (s 5–80) | áno | `roads[].sw[1]` = 1.9 v prvých dvoch boxoch. |
+| Š4.7 | Súvislá dláždená plocha na severe (s 86–136, od obrubníka t ≈ 4 po fasády a múr t 18.5–21), žulové kocky `#b9ac98` v oblúkovom vzore | áno (čiastočne) | `lots.islands` `PLOCHA_S`, `top: 'setts'`, `h: 0.17`, `kerb: '#a6a29a'` — vyvýšená plocha s obrubníkom po celom obvode, teda hrana k vozovke je obrubník ako v skutočnosti. V tomto úseku má preto `roads[].sw[1] = 0` (chodník by plochu prekryl). Odtieň sa pri ostrovčeku zadať nedá (materiál `setts` má pevných `#77726a`), vnútorná hrana je na t 3.5 namiesto 4.0, aby medzi vozovkou a obrubníkom nezostal pás terénu. Oblúkový vzor kladenia hra pre ostrovček nevie (`fan` má iba `surfaces`). |
+| Š4.8 | Rigol z 2–3 radov menších kociek pozdĺž oboch obrubníkov (~0.3 m, na strane chodníka) | áno (čiastočne) | `lots.ribbons` — 4 pásy (sever park, sever plocha, juh s 4–76, juh s 83–136), `w 0.35`, `m: 'settsDark'`, `c: '#5e5952'`. Kreslené sú na strane vozovky, nie chodníka: chodník je vyvýšený o 0.15 m a pás pod ním by nebolo vidieť. |
+| Š4.9 | Park (trávnik) severne od chodníka, s 5–80 | áno | OSM `village_green 38422243` — plocha už v hre je, štvrť ju nemení. `lots.clear` do parku zámerne nezasahuje, aby v ňom ostala procedurálna zeleň. |
+| Š4.10 | Ústie Jatočnej (kocky, oblé nárožia obrubníkov), s 80–88 | áno (čiastočne) | Samostatný záznam `roads` `name: 'Jatočná'` s `box` iba na ústie, `surface: 'settsDark'`, `sw` a `off` ponechané na predvolených hodnotách. Oblé nárožia kreslí generátor z výplne križovatky. |
+| Š4.11 | Diagonálne dláždené chodníky cez trávnik parku | áno | OSM footway 38422222/…224/…228/…233/…238 — kreslí ich generátor, štvrť ich nemení. |
+| Š4.12 | Spomaľovače, zrkadlá, parkovacie čiary, stredová čiara | — | V úseku nie sú (overené na všetkých 40 snímkach). |
+
+## Š5. Lampy (`lamps`, `lots.lamps`)
+
+Všetkých 12 lámp je zapísaných dvakrát: v kľúči `lamps` podľa schémy (`p`, `dir`, `t`, `h`, `arm`, `color`) a v `lots.lamps`,
+aby boli vidieť už teraz. **Po PR tech/prvky treba `lots.lamps` z tejto štvrte vypustiť**, inak sa nakreslia dvakrát
+(upozornenie je aj v komentári nad `lamps` v `centrum1.js`).
+
+| # | Položka | v hre | Kde v dátach / poznámka |
+|---|---|---|---|
+| Š5.1–Š5.7 | 7 dvojramenných historických kandelábrov na severnej strane (s 6.9, 16.9, 39.4, 63.7, 86.1, 108.2, 133.1), čierne liatinové, 2 lucerny na oblúkových ramenách (rozpätie ~1.3 m), ramená kolmo na ulicu, h 5.0 | áno (čiastočne) | `lamps` + `lots.lamps`, `t: 'cand2'`, `a: 63` (= dir 153 − 90). Chýbajúci typ: **Stĺpy verejného osvetlenia – typy** — `cand2` má pevnú výšku 3.55 m namiesto 5.0 a farbu ani rozpätie ramien sa zadať nedá. |
+| Š5.8–Š5.12 | 5 jednoramenných lucerien na južnej strane pri obrubníku (s 27.0, 51.3, 75.0, 99.3, 124.1), h 5.0 | áno (čiastočne) | `lamps` + `lots.lamps`, `t: 'lantern'`. `lantern` má pevnú výšku 3.7 m; rameno nad chodník hra nevie (lucerna sedí priamo na stĺpe). |
+| Š5.13 | Zmazanie lámp z mapy v úseku | áno | `lots.clear` (druhý polygón) + `lots.clearLamps: true`; podľa schémy aj `clearLamps: [[−5,−195,116,−115]]`. Hranica x < 116 drží obdĺžnik mimo dlažby PLAZA, ktorá si lampy maže sama. |
+| Š5.14 | Iné lampy v úseku | — | Nie sú (overené na všetkých 40 snímkach). |
+
+## Š6. Zvislé dopravné značky (`trafficSigns`)
+
+Všetkých 9 značiek (v 7 záznamoch) visí na stĺpoch lámp, samostatný stĺpik v úseku nie je. Všetky sú **v hre nie**,
+chýbajúci typ: **Zvislé dopravné značky**. Dáta sú v `trafficSigns`, `on: 'lamp'` podľa rozšírenej schémy.
+
+| # | Položka | Kde v dátach |
+|---|---|---|
+| Š6.1 | P1 Daj prednosť v jazde + malá biela tabuľka (text nečitateľný), s 6.9 t 11.6, h 2.4; `dir` neisté ±20 | `p: [110.4,−191.2]`, `dir: 125` |
+| Š6.2 | B34 Zákaz zastavenia, s 16.9 t 7.3, h 2.4; `dir` neisté ±30 | `p: [101.9,−182.9]`, `dir: 75` |
+| Š6.3 | P2 Hlavná cesta, s 63.7 t 5.0, h 2.4 | `p: [60.1,−161.0]`, `dir: 63` |
+| Š6.4 | B34 Zákaz zastavenia, s 86.1 t 6.3, h 2.4 | `p: [39.5,−152.0]`, `dir: 114` |
+| Š6.5 | P2 Hlavná cesta + IP6 Priechod pre chodcov, s 133.1 t 7.3, h 2.4 | `p: [−2.8,−131.6]`, `dir: 110` |
+| Š6.6 | P2 Hlavná cesta + modrá obdĺžniková tabuľa (nečitateľná) + držiak na vlajku, s 27.0 t −6.9, h 2.4 | `p: [98.2,−165.9]`, `dir: 67` |
+| Š6.7 | IP16 Parkovisko + E12 „Mestská polícia“, s 75.0 t −6.3, h 2.3; `dir` neisté | `p: [55.1,−145.8]`, `dir: 30` |
+
+## Š7. Priechody a vodorovné značenie (`crossings`, `markings`)
+
+| # | Položka | v hre | Kde v dátach / poznámka |
+|---|---|---|---|
+| Š7.1 | Zebra pri námestí, s 5–7.5, w 2.5, znížené obrubníky; OSM 7850321812 | áno | Hra ju kreslí automaticky z OSM (`k = 11`) a na renderi Š0‑254 aj Š1‑67 je dobre viditeľná (leží mimo dlažby PLAZA, na rozdiel od zebry na Gorkého). Zapísaná je aj ako `crossings[1]` s poznámkou „= OSM 7850321812“ — podľa schémy tech/prvky pri kreslení potlačí OSM zebru do 3 m, takže dvojmo nebude. Odchýlka stredu zápisu od OSM je 0.3 m. |
+| Š7.2 | Zebra pri Potočnej, s 134.3–136.8, w 2.5; OSM 9343609687 | áno | To isté, `crossings[2]`, odchýlka stredu 1.0 m. Hranica úsekov — s Potočnou neduplikovať. |
+| Š7.3 | Zebra cez ústie Jatočnej; OSM 1012760400 / node 454171252 | áno | Hra ju kreslí z OSM. Do `crossings` centrum1 sa podľa rozhodnutia vedúceho **nezapisuje**, patrí ulici Jatočná. Poznámka je v `todo`. |
+| Š7.4 | Iné vodorovné značenie | — | Okrem zebier žiadne (ani parkovacie čiary, ani stredová čiara) — overené na všetkých pozdĺžnych snímkach. `markings` pre Štefánikovu preto nie je. Nápis „Štefánikova“ na vozovke v snímkach je popis Google. |
+
+## Š8. Tabuľky s názvom ulice (`nameplates`)
+
+| # | Položka | v hre | Kde v dátach / poznámka |
+|---|---|---|---|
+| Š8.1 | Tabuľky s názvom ulice a popisné čísla | — | Prieskum na fasádach v úseku žiadne nenašiel (z 8–10 m by červená tabuľka ako „Gorkého“ bola viditeľná). Neisté iba nárožie 60999339/Potočná (vidno ho iba šikmo zo Š8‑243). `nameplates` pre Štefánikovu preto nie je. |
+
+## Š9. Vjazdy, stĺpy vedenia, parkovanie
+
+| # | Položka | v hre | Kde v dátach / poznámka |
+|---|---|---|---|
+| Š9.1 | Prejazd do dvora 60999413 (s 80.5–85.8, otvorený oblúk, bez brány) | nie | Obrubník pred ním je súvislý → nejde o vjazd, `driveways` sa nezapisuje. Hra prejazd nekreslí, stena je plná. Dáta: `todo`. |
+| Š9.2 | Prejazd pod rizalitom (s 110–112.9, kovaná brána) | nie | To isté; brána je ako `fences` (Š3.2), otvor v prízemí hra nevie. Dáta: `todo`. |
+| Š9.3 | Stĺpy elektrického/telefónneho vedenia, vedenia nad ulicou | — | V úseku nie sú (overených všetkých 40 snímok), vedenie je zrejme v zemi. `poles` ani `wires` preto nie sú. |
+| Š9.4 | Pozdĺžne státie áut pri južnom obrubníku (s ≈ 10–134, bez značenia) | nie zámerne | Zaparkované autá sú v hre vypnuté a `lots.clear` ich v koridore aj tak maže. Vyhradené státie Mestskej polície (s ≈ 70–80) je v `todo`. |
+
+## Š10. Poklopy, vpuste, koše, skrinky, lavičky, plagátový stĺp (`furniture`)
+
+| # | Položka | v hre | Kde v dátach / poznámka |
+|---|---|---|---|
+| Š10.1 | 5 čiernych kovových košov na stĺpiku, vždy pri lampe (s 6.5, 62.7, 85.2, 75.8, 125.6) | nie | Chýbajúci typ: **Odpadkové koše**. Dáta: `furniture`, `t: 'litterBin'`. |
+| Š10.2 | Okrúhly poklop v strede vozovky (s 76.5) a obdĺžnikový poklop v chodníku pred prejazdom (s 112.4) | nie | Chýbajúci typ: **Poklopy, kanály, uličné vpuste**. Dáta: `furniture`, `t: 'manhole'`. |
+| Š10.3 | Uličná vpusť pri severnom obrubníku (s 86.8) a mriežka vo vozovke pri južnom obrubníku (s 86.9, **neisté** či vpusť alebo poklop) | nie | To isté, `t: 'drain'`. |
+| Š10.4 | Sivá skrinka na fasáde pri prejazde (s 113.7) | nie | Viď Š2.13. |
+| Š10.5 | Veľká tmavá okrúhla misa s kríkom na ploche (s 108.9 t 14.3) | nie | Chýbajúci typ: **Kvetináče**. Dáta: `furniture`, `t: 'planter'`. |
+| Š10.6 | 5 lavičiek na ploche (s 99.7, 107.4, 112.0, 118.0, 93.6): 2 biele kamenné bloky s drevenou doskou, 3 drevené s operadlom | áno | `furniture`, `t: 'bench'`, `style` `stone` / `wood`, `ang: 333` (= dir 153 − 180). Kamenný typ hra kreslí ako hladký blok bez drevenej dosky. Poloha lavičiek pri s 107.4 a 93.6 je neistá (±0.8 a ±1.5 m, iba jeden pohľad). |
+| Š10.7 | Plagátový stĺp na rohu plochy pri Jatočnej (s 81.7 t 11.2, d ≈ 1.0 m, h ≈ 2.8) | áno | `furniture`, `t: 'adColumn'`, `rot: 0.175` (= (153 − 90) / 360). Hra kreslí vlastné plagáty a tmavozelenú kupolu; skutočný stĺp je biely so sivou strieškou. |
+| Š10.8 | Kontajnery, hydranty, poštové schránky, zastávky, parkovacie automaty, telefónne búdky | — | V úseku nie sú (overené). |
+
+## Š11. Zeleň (`lots.trees`)
+
+| # | Položka | v hre | Kde v dátach / poznámka |
+|---|---|---|---|
+| Š11.1 | Rad 9 mladých líp na dláždenej ploche (s 88.6 → 136, t 13.4–14.7, h ≈ 8 m, koruna 4.5–5 m) | áno | `lots.trees`, `k: 10`, `h: 8`. Druh (lipa) sa zadať nedá, `k 10` je najbližší listnatý typ; výšku hra losuje (0,75–1,3 × základ). |
+| Š11.2 | 6 smrekov pichľavých v parku (s 17–68, h 13–17 m) | áno | `lots.trees`, `k: 11` (smrek), `h` 13–17. Polohy ±1.5–2 m (triangulované z 2–3 stanovísk). |
+| Š11.3 | Ostatné stromy parku (listnaté pri pavilóne a pri ZUŠ, ďalšie smreky 20–60 m od ulice) | áno (procedurálne) | Prieskum ich jednotlivo nezameral (priemet ±3–5 m). `lots.clear` preto do parku nezasahuje a zeleň tam necháva na generátor. Dáta: `todo`. |
+| Š11.4 | Okrúhly kvetinový záhon v parku (stred ≈ (73,−185), priemer ≈ 9 m) | nie | Kvetinový záhon schéma nepozná (`trees` je iba na stromy a kry). Dáta: `todo`. |
+| Š11.5 | Nízky záhon pri orientačnej tabuli pri kiosku (~2 × 1 m) | nie | To isté; spomenuté v `todo` pri oranžovej informačnej tabuli. |
+| Š11.6 | Stromy na južnej strane | — | Žiadne nie sú. |
+
+## Š12. Položky `todo` (čo sa do schémy nezmestí)
+
+V `centrum1.js` je 23 položiek `todo` s prefixom „ŠT:“. Prvých 13 je priamo zo sekcie `### todo` balíka
+(kiosk, stojan na bicykle, orientačný smerovník, cyklosmerovník, oranžová informačná tabuľa, informačná tabuľa s mapou,
+Obecná studňa, socha Vinár, 2 sivé kamenné stély, 3 čierne stĺpiky, letná terasa, reklamné stojany A, food truck),
+zvyšných 10 doplnil Stavbár (kvetinový záhon, pozdĺžne státie, dom chýbajúci v OSM aj s poznámkou o nepriechodnom prejazde,
+prejazd 60999413, dvojfarebnosť bloku, detaily fasád juh a sever, radnica, ZUŠ + zebra cez Jatočnú, nezamerané stromy parku).
+Pri každej je uvedený chýbajúci typ prvku menom.
+
+Poznámka: Obecná studňa (OSM `man_made=water_well` 6512779637) je v hre vidieť — kreslí ju generátor z mapy,
+nie štvrť. Zápis v `todo` sa týka jej presnej podoby (kamenná obruba, rumpál, strieška).
+
+## Rendery Štefánikovej
+
+Skript `prieskum/centrum1/render_stefanikova.py`, 10 stanovísk × 4 smery, 800 × 516 px, zvislé zorné pole 90° (f = 258 px),
+kamera 2.5 m nad terénom, kalibrované polohy kamier z balíka (nie polohy z názvov snímok), čas v hre **07:12 (`?t=0.30`)**.
+Iný čas než pri Gorkého má dôvod: hlavný rad domov na južnej strane hľadí na SSZ (333°) a na poludnie je celý v tieni;
+pri `t = 0.30` ho osvetlí slnko od VJV a farby fasád sa dajú porovnať, pričom severná strana (líce 153°) ostáva nasvietená.
+
+## Rozdiely voči Street View, ktoré ostali (Štefánikova)
+
+1. **Osi a veľkosť okien** si generátor určuje sám; presné osi z prieskumu sa zadať nedajú (Š2.15).
+2. **Dvojfarebnosť bloku 61001176/61000307** chýba, blok je celý krémovobroskyňový (Š2.14).
+3. **Oba prejazdy** (s 80.5–85.8 a s 110–112.9) sú v hre zamurované; oblúk ani otvor v prízemí engine nevie (Š1.7, Š9.1).
+4. **Oblúkové kladenie kociek** vozovky a plochy hra pre ostrovček nevie; plocha má rovný vzor a odtieň `#77726a` namiesto `#b9ac98` (Š4.7).
+5. **Výška lámp** je 3.55 m (cand2) a 3.7 m (lantern) namiesto 5.0 m; poloha a typ sedia (Š5).
+6. **Radnica** je v hre celá mätovozelená, v skutočnosti má v Štefánikovej štyri rôzne úseky — patrí do `namestie.js` a tento PR ju nemení (Š1.13).
+7. **Sezónne a dočasné veci** (letná terasa, stojany A, food truck, zaparkované autá) sa zámerne neprenášajú.
+8. Všetko, čo je vyššie označené „v hre nie“, v renderoch prirodzene chýba.
+
+## Vedľajší účinok na rendery Gorkého
+
+`lots.clear` Štefánikovej maže 16 stromov z mapy v koridore ulice. `vegetation.js` odvodzuje variant, mierku a natočenie
+každého stromu z jeho **poradia v poli `D.t`** (`hashU(i, seed)`), takže vypustenie stromov posunie indexy všetkých
+neskorších stromov a procedurálna zeleň sa v celom meste prelosuje. Na renderoch Gorkého sa preto zmenili iba stromy
+(porovnanie pred/po: budovy, vozovka, chodníky, obrubníky, sokle aj tabule sú pixel po pixeli rovnaké).
+Dáta Gorkého sa v tomto kroku nemenili.
